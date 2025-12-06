@@ -28,3 +28,18 @@ to create the makefile and then
 make
 ```
 to compile the library and the demos.
+
+## How to run
+
+Create the state dictionary which converts the weights from torchvision to a dictionary
+which is readable by C++ (see https://github.com/pytorch/pytorch/issues/36577):
+
+```
+python create_dict_from_weights.py
+```
+
+The run the test which tries to classify a single image:
+
+```
+./test_mobilenet myimage.jpg
+```

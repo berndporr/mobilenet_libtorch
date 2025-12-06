@@ -23,7 +23,11 @@ torch::Tensor preprocess_opencv_bgr(const cv::Mat& img_bgr, int64_t target_w = 2
     return tensor;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+	fprintf(stderr,"Usage: %s <imagefile>\n",argv[0]);
+	return -1;
+    }
     torch::manual_seed(1);
     torch::Device device = torch::kCPU; // change to torch::kCUDA if available
 
@@ -58,7 +62,7 @@ int main() {
     std::cout << "Feature extractor frozen.\n";
 
     // Example inference with OpenCV
-    cv::Mat img = cv::imread("test.jpg");
+    cv::Mat img = cv::imread(argv[1]);
     if (img.empty()) {
         std::cerr << "Failed to open test.jpg\n";
     } else {
