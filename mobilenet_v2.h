@@ -13,17 +13,16 @@
 
 inline torch::Tensor relu6(const torch::Tensor &x)
 {
-    // relu6(x) = clamp(x.relu(), 0, 6)
     return torch::clamp(torch::relu(x), 0, 6);
 }
 
 // make_divisible mirrors torchvision.utils._make_divisible
-inline int64_t make_divisible(int64_t v, int64_t divisor = 8, int64_t min_value = -1)
+inline int make_divisible(int v, int divisor = 8, int min_value = -1)
 {
     if (min_value < 0)
         min_value = divisor;
-    int64_t new_v = std::max(min_value, (int64_t)((v + divisor / 2) / divisor * divisor));
-    if (new_v < static_cast<int64_t>(0.9 * v))
+    int new_v = std::max(min_value, (int)((int)(v + divisor / 2) / divisor * divisor));
+    if (new_v < (0.9 * v))
         new_v += divisor;
     return new_v;
 }
@@ -33,10 +32,10 @@ struct InvertedResidualImpl : torch::nn::Module
     torch::nn::Sequential conv{nullptr};
     bool use_res_connect;
 
-    InvertedResidualImpl(int64_t inp, int64_t oup, int64_t stride, int64_t expand_ratio)
+    InvertedResidualImpl(int inp, int oup, int stride, int expand_ratio)
     {
         use_res_connect = (stride == 1) && (inp == oup);
-        int64_t hidden_dim = inp * expand_ratio;
+        int hidden_dim = inp * expand_ratio;
 
         conv = torch::nn::Sequential();
 
@@ -84,13 +83,13 @@ struct MobileNetV2Impl : torch::nn::Module
 {
     torch::nn::Sequential features{nullptr};
     torch::nn::Sequential classifier{nullptr}; // Dropout + Linear
-    int64_t last_channel;
+    int last_channel;
 
-    MobileNetV2Impl(int64_t num_classes = 1000, float width_mult = 1.0f, int64_t round_nearest = 8)
+    MobileNetV2Impl(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8)
     {
         // MobileNetV2 inverted residual settings:
         // t, c, n, s  (expansion, output channels, repeats, stride)
-        std::vector<std::array<int64_t, 4>> inverted_residual_setting = {
+        std::vector<std::array<int, 4>> inverted_residual_setting = {
             {1, 16, 1, 1},
             {6, 24, 2, 2},
             {6, 32, 3, 2},
@@ -100,11 +99,11 @@ struct MobileNetV2Impl : torch::nn::Module
             {6, 320, 1, 1},
         };
 
-        int64_t input_channel = 32;
+        int input_channel = 32;
         last_channel = 1280;
 
-        input_channel = make_divisible(static_cast<int64_t>(input_channel * width_mult), round_nearest);
-        last_channel = make_divisible(static_cast<int64_t>(last_channel * std::max(1.0f, width_mult)), round_nearest);
+        input_channel = make_divisible(input_channel * width_mult, round_nearest);
+        last_channel = make_divisible(last_channel * std::max(1.0f, width_mult), round_nearest);
 
         features = torch::nn::Sequential();
 
@@ -117,15 +116,15 @@ struct MobileNetV2Impl : torch::nn::Module
         // inverted residual blocks
         for (const auto &cfg : inverted_residual_setting)
         {
-            int64_t t = cfg[0];
-            int64_t c = cfg[1];
-            int64_t n = cfg[2];
-            int64_t s = cfg[3];
+            int t = cfg[0];
+            int c = cfg[1];
+            int n = cfg[2];
+            int s = cfg[3];
 
-            int64_t output_channel = make_divisible(static_cast<int64_t>(c * width_mult), round_nearest);
-            for (int64_t i = 0; i < n; ++i)
+            int output_channel = make_divisible(c * width_mult, round_nearest);
+            for (int i = 0; i < n; ++i)
             {
-                int64_t stride = (i == 0) ? s : 1;
+                int stride = (i == 0) ? s : 1;
                 features->push_back(InvertedResidualImpl(input_channel, output_channel, stride, t));
                 input_channel = output_channel;
             }
