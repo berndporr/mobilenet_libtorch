@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     // Construct MobileNetV2 with desired number of classes (default 1000)
     int64_t num_classes = 1000;
-    MobileNetV2Impl model(num_classes, /*width_mult=*/1.0f);
+    MobileNetV2 model(num_classes, /*width_mult=*/1.0f);
     model.load_parameters("mobilenet_v2.pt");
     model.to(device);
 
