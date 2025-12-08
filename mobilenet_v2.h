@@ -32,41 +32,45 @@ inline int make_divisible(int v, int divisor = 8, int min_value = -1)
 struct Conv2dNormActivation : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
+    static constexpr char className[]="Conv2dNormActivation";
 
     Conv2dNormActivation(int in_channels,
-			 int out_channels,
-			 int kernel_size = 3,
-			 int stride = 1,
-			 int padding = -1,
-			 int groups = 1,
-			 bool linear = false)
+                         int out_channels,
+                         int kernel_size = 3,
+                         int stride = 1,
+                         int padding = -1,
+                         int groups = 1,
+                         bool linear = false)
     {
-	const int dilation = 1;
-	conv = torch::nn::Sequential();
-	if (padding < 0) {
-	    padding = (kernel_size - 1) / 2 * dilation;
-	}
+        const int dilation = 1;
+        conv = torch::nn::Sequential();
+        if (padding < 0)
+        {
+            padding = (kernel_size - 1) / 2 * dilation;
+        }
         conv->push_back(torch::nn::Conv2d(
-			    torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)
-			    .stride(stride)
-			    .padding(padding)
-			    .groups(groups)
-			    .bias(false)));
+            torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)
+                .stride(stride)
+                .padding(padding)
+                .groups(groups)
+                .bias(false)));
         conv->push_back(torch::nn::BatchNorm2d(out_channels));
-        if (!linear) conv->push_back(torch::nn::Functional(relu6));
-        register_module("Conv2dNormActivation", conv);
+        if (!linear)
+            conv->push_back(torch::nn::Functional(relu6));
+        register_module(className, conv);
     }
 
     torch::Tensor forward(const torch::Tensor &x)
     {
-	return conv->forward(x);
+        return conv->forward(x);
     }
 };
-    
+
 struct InvertedResidual : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
     bool use_res_connect;
+    static constexpr char className[]="InvertedResidual";
 
     InvertedResidual(int inp, int oup, int stride, int expand_ratio)
     {
@@ -77,35 +81,32 @@ struct InvertedResidual : torch::nn::Module
 
         if (expand_ratio != 1)
         {
-	    conv->push_back(
-		Conv2dNormActivation(inp,
-				     hidden_dim,
-				     /*kernel_size*/ 1,
-				     /*stride*/ 1)
-		);
+            conv->push_back(
+                Conv2dNormActivation(inp,
+                                     hidden_dim,
+                                     /*kernel_size*/ 1,
+                                     /*stride*/ 1));
         }
-	
-	// https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
-	conv->push_back(
-	    Conv2dNormActivation(hidden_dim,
-				 hidden_dim,
-				 /*kernel_size=*/ 3,
-				 /*stride=*/ stride,
-				 /*padding=*/ 1,
-				 /*groups=*/ hidden_dim)
-	    );
-	
-	conv->push_back(
-	    Conv2dNormActivation(hidden_dim,
-				 oup,
-				 /*kernel_size=*/ 1,
-				 /*stride=*/ 1,
-				 /*padding=*/ -1,
-				 /*groups=*/ 1,
-				 true)
-	    );
-	
-        register_module("InvertedResidual", conv);
+
+        // https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
+        conv->push_back(
+            Conv2dNormActivation(hidden_dim,
+                                 hidden_dim,
+                                 /*kernel_size=*/3,
+                                 /*stride=*/stride,
+                                 /*padding=*/1,
+                                 /*groups=*/hidden_dim));
+
+        conv->push_back(
+            Conv2dNormActivation(hidden_dim,
+                                 oup,
+                                 /*kernel_size=*/1,
+                                 /*stride=*/1,
+                                 /*padding=*/-1,
+                                 /*groups=*/1,
+                                 true));
+
+        register_module(className, conv);
     }
 
     torch::Tensor forward(const torch::Tensor &x)
@@ -149,14 +150,14 @@ struct MobileNetV2 : torch::nn::Module
 
         features = torch::nn::Sequential();
 
-	features->push_back("0",
-			    Conv2dNormActivation(3,
-						 input_channel,
-						 /*kernel_size=*/ 3,
-						 /*stride =*/ 2,
-						 /*padding =*/ 1));
-	
-	int j = 1;
+        features->push_back("0",
+                            Conv2dNormActivation(3,
+                                                 input_channel,
+                                                 /*kernel_size=*/3,
+                                                 /*stride =*/2,
+                                                 /*padding =*/1));
+
+        int j = 1;
         // inverted residual blocks
         for (const auto &cfg : inverted_residual_setting)
         {
@@ -169,25 +170,24 @@ struct MobileNetV2 : torch::nn::Module
             for (int i = 0; i < n; ++i)
             {
                 int stride = (i == 0) ? s : 1;
-		std::cerr << "i=" << i << std::endl;
                 features->push_back(std::to_string(j++),
-				    InvertedResidual(input_channel, output_channel, stride, t));
+                                    InvertedResidual(input_channel, output_channel, stride, t));
                 input_channel = output_channel;
             }
         }
 
-	features->push_back(std::to_string(j++),
-			    Conv2dNormActivation(input_channel,
-						 last_channel,
-						 /*kernel_size=*/ 1,
-						 /*stride =*/ 1));
+        features->push_back(std::to_string(j++),
+                            Conv2dNormActivation(input_channel,
+                                                 last_channel,
+                                                 /*kernel_size=*/1,
+                                                 /*stride =*/1));
 
         register_module("features", features);
 
         // classifier: Dropout + Linear
         classifier = torch::nn::Sequential();
-        classifier->push_back("0",torch::nn::Dropout(torch::nn::DropoutOptions(/*p=*/0.2)));
-        classifier->push_back("1",torch::nn::Linear(torch::nn::LinearOptions(last_channel, num_classes)));
+        classifier->push_back("0", torch::nn::Dropout(torch::nn::DropoutOptions(/*p=*/0.2)));
+        classifier->push_back("1", torch::nn::Linear(torch::nn::LinearOptions(last_channel, num_classes)));
         register_module("classifier", classifier);
 
         // Initialize weights (same style as torchvision)
@@ -228,6 +228,17 @@ struct MobileNetV2 : torch::nn::Module
         }
     }
 
+    // renames the keys here so that they match the python torchvision naming convention
+    std::string ourkey2torchvision(std::string k)
+    {
+        // called simply "conv" in the weights file
+        k = std::regex_replace(k, std::regex(InvertedResidual::className), "conv");
+        // not used at all in the weights file
+        const std::string r = std::string(Conv2dNormActivation::className)+"\\.";
+        k = std::regex_replace(k, std::regex(r), "");
+        return k;
+    }
+
     // https://github.com/pytorch/pytorch/issues/36577
     void load_parameters(std::string pt)
     {
@@ -238,14 +249,11 @@ struct MobileNetV2 : torch::nn::Module
         input.close();
         c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();
         const torch::OrderedDict<std::string, at::Tensor> &model_params = named_parameters();
-        std::vector<std::string> param_names;
         std::cerr << "Parameters we have in this model here: " << std::endl;
-        for (auto const &w : model_params)
+        for (auto const &m : model_params)
         {
-	    std::string k = std::regex_replace( w.key(), std::regex("InvertedResidual"), "conv" );
-	    k = std::regex_replace( k, std::regex("Conv2dNormActivation\\."), "");
-            param_names.push_back(k);
-            std::cerr << w.key() << "->" << k << ": " << w.value().sizes() << std::endl;
+            auto k = ourkey2torchvision(m.key());
+            std::cerr << m.key() << "->" << k << ": " << m.value().sizes() << std::endl;
         }
         std::cerr << "Parameters we have in the weight file " << pt << ":" << std::endl;
         for (auto const &w : weights)
@@ -253,20 +261,23 @@ struct MobileNetV2 : torch::nn::Module
             std::cerr << w.key() << ": " << w.value().toTensor().sizes() << std::endl;
         }
         torch::NoGradGuard no_grad;
-	std::cerr << "Loading weights" << std::endl;
-        for (auto const &w : weights)
+        std::cerr << "Loading weights" << std::endl;
+        for (auto &m : model_params)
         {
-            std::string name = w.key().toStringRef();
-            at::Tensor param = w.value().toTensor();
-            if (std::find(param_names.begin(), param_names.end(), name) != param_names.end())
-            {
-                std::cerr << name << ": " << param.sizes() << std::endl;
-                model_params.find(name)->copy_(param);
+            std::string model_key = m.key();
+            std::string model_key4torchvision = ourkey2torchvision(model_key);
+            std::cerr << "Searching: " << model_key4torchvision << ": " << m.value().sizes() << std::endl;
+            bool foundit = false;
+            for (auto const &w : weights) {
+                if (model_key4torchvision == w.key())
+                {
+                    std::cerr << "Found it: " << w.key() << std::endl;
+                    m.value().copy_(torch::clone(w.value().toTensor()));
+                    foundit = true;
+                    break;
+                }
             }
-            else
-            {
-                std::cout << name << " does not exist among model parameters." << std::endl;
-            };
+            if (!foundit) std::cerr << model_key4torchvision << " could not be found!" << std::endl;
         }
     }
 };

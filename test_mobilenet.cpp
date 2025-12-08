@@ -18,7 +18,6 @@ torch::Tensor preprocess_opencv_bgr(const cv::Mat& img_bgr, int64_t target_w = 2
     tensor[1] = (tensor[1] - 0.456f) / 0.224f; // G
     tensor[2] = (tensor[2] - 0.406f) / 0.225f; // B
 
-    // Add batch
     tensor = tensor.unsqueeze(0);
     return tensor;
 }
@@ -38,28 +37,6 @@ int main(int argc, char *argv[]) {
     model.to(device);
 
     std::cout << "Model created.\n";
-
-    // Example: replace classifier to new num_classes (e.g., 10)
-    int64_t new_num_classes = 10;
-    // safer: query last module in classifier
-    auto& classifier_seq = model.classifier;
-    // classifier: [Dropout, Linear], so classifier[1] is Linear
-    auto linear_module = classifier_seq->ptr(1);
-    auto linear = linear_module->as<torch::nn::Linear>();
-    int64_t in_features = linear->options.in_features();
-
-    // Create new linear and replace
-    torch::nn::Linear new_fc(torch::nn::LinearOptions(in_features, new_num_classes));
-    model.classifier = torch::nn::Sequential();
-    model.classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(0.2)));
-    model.classifier->push_back(new_fc);
-    model.to(device);
-
-    std::cout << "Replaced classifier with " << new_num_classes << " classes.\n";
-
-    // Optionally freeze backbone
-    for (auto& p : model.features->parameters()) p.requires_grad_(false);
-    std::cout << "Feature extractor frozen.\n";
 
     // Example inference with OpenCV
     cv::Mat img = cv::imread(argv[1]);
