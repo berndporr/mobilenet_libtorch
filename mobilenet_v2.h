@@ -74,8 +74,11 @@ struct InvertedResidual : torch::nn::Module
 
     InvertedResidual(int inp, int oup, int stride, int expand_ratio)
     {
+        if ((stride < 1) || (stride > 2)) {
+            throw "Stride needs to be 1 or 2.";
+        }
+        int hidden_dim = (int)round(inp * expand_ratio);
         use_res_connect = (stride == 1) && (inp == oup);
-        int hidden_dim = inp * expand_ratio;
 
         conv = torch::nn::Sequential();
 
@@ -84,8 +87,7 @@ struct InvertedResidual : torch::nn::Module
             conv->push_back(
                 Conv2dNormActivation(inp,
                                      hidden_dim,
-                                     /*kernel_size*/ 1,
-                                     /*stride*/ 1));
+                                     /*kernel_size*/ 1));
         }
 
         conv->push_back(
@@ -93,7 +95,7 @@ struct InvertedResidual : torch::nn::Module
                                  hidden_dim,
                                  /*kernel_size=*/3,
                                  /*stride=*/stride,
-                                 /*padding=*/1,
+                                 /*padding=*/-1,
                                  /*groups=*/hidden_dim));
 
         conv->push_back(torch::nn::Conv2d(
@@ -150,8 +152,7 @@ struct MobileNetV2 : torch::nn::Module
                             Conv2dNormActivation(3,
                                                  input_channel,
                                                  /*kernel_size=*/3,
-                                                 /*stride =*/2,
-                                                 /*padding =*/1));
+                                                 /*stride =*/2));
 
         int j = 1;
         // inverted residual blocks
@@ -175,8 +176,7 @@ struct MobileNetV2 : torch::nn::Module
         features->push_back(std::to_string(j++),
                             Conv2dNormActivation(input_channel,
                                                  last_channel,
-                                                 /*kernel_size=*/1,
-                                                 /*stride =*/1));
+                                                 /*kernel_size=*/1));
 
         register_module("features", features);
 
@@ -194,7 +194,7 @@ struct MobileNetV2 : torch::nn::Module
         x = features->forward(x);
         const torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions({1, 1});
         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);
-        x = x.view({x.size(0), -1});
+        x = torch::flatten(x,1);
         x = classifier->forward(x);
         return x;
     }
@@ -267,7 +267,7 @@ struct MobileNetV2 : torch::nn::Module
                 if (model_key4torchvision == w.key())
                 {
                     std::cerr << "Found it: " << w.key() << std::endl;
-                    m.value().copy_(torch::clone(w.value().toTensor()));
+                    m.value().copy_(w.value().toTensor());
                     foundit = true;
                     break;
                 }
