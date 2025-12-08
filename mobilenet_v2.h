@@ -23,9 +23,10 @@ inline int make_divisible(int v, int divisor = 8, int min_value = -1)
 {
     if (min_value < 0)
         min_value = divisor;
-    int new_v = std::max(min_value, (int)((int)(v + divisor / 2) / divisor * divisor));
-    if (new_v < (0.9 * v))
+    int new_v = std::max(min_value, ((int)(((int)(v + divisor / 2)) / divisor)) * divisor);
+    if (new_v < (0.9 * (float)v))
         new_v += divisor;
+    std::cerr << "----------" << new_v << "------------" << std::endl;
     return new_v;
 }
 
@@ -33,7 +34,7 @@ inline int make_divisible(int v, int divisor = 8, int min_value = -1)
 struct Conv2dNormActivation : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
-    static constexpr char className[]="Conv2dNormActivation";
+    static constexpr char className[] = "Conv2dNormActivation";
 
     Conv2dNormActivation(int in_channels,
                          int out_channels,
@@ -70,11 +71,12 @@ struct InvertedResidual : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
     bool use_res_connect;
-    static constexpr char className[]="InvertedResidual";
+    static constexpr char className[] = "InvertedResidual";
 
     InvertedResidual(int inp, int oup, int stride, int expand_ratio)
     {
-        if ((stride < 1) || (stride > 2)) {
+        if ((stride < 1) || (stride > 2))
+        {
             throw "Stride needs to be 1 or 2.";
         }
         int hidden_dim = (int)round(inp * expand_ratio);
@@ -99,8 +101,11 @@ struct InvertedResidual : torch::nn::Module
                                  /*groups=*/hidden_dim));
 
         conv->push_back(torch::nn::Conv2d(
-            torch::nn::Conv2dOptions(hidden_dim, oup, 
-                                    /*kernel_size=*/1).stride(1).padding(0).bias(false)));
+            torch::nn::Conv2dOptions(hidden_dim, oup,
+                                     /*kernel_size=*/1)
+                .stride(1)
+                .padding(0)
+                .bias(false)));
         conv->push_back(torch::nn::BatchNorm2d(oup));
 
         register_module(className, conv);
@@ -185,8 +190,6 @@ struct MobileNetV2 : torch::nn::Module
         classifier->push_back("0", torch::nn::Dropout(torch::nn::DropoutOptions(/*p=*/0.2)));
         classifier->push_back("1", torch::nn::Linear(torch::nn::LinearOptions(last_channel, num_classes)));
         register_module("classifier", classifier);
-
-        initialize_weights();
     }
 
     torch::Tensor forward(torch::Tensor x)
@@ -194,7 +197,7 @@ struct MobileNetV2 : torch::nn::Module
         x = features->forward(x);
         const torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions({1, 1});
         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);
-        x = torch::flatten(x,1);
+        x = torch::flatten(x, 1);
         x = classifier->forward(x);
         return x;
     }
@@ -229,13 +232,13 @@ struct MobileNetV2 : torch::nn::Module
         // called simply "conv" in the weights file
         k = std::regex_replace(k, std::regex(InvertedResidual::className), "conv");
         // not used at all in the weights file
-        const std::string r = std::string(Conv2dNormActivation::className)+"\\.";
+        const std::string r = std::string(Conv2dNormActivation::className) + "\\.";
         k = std::regex_replace(k, std::regex(r), "");
         return k;
     }
 
     // https://github.com/pytorch/pytorch/issues/36577
-    void load_parameters(std::string pt)
+    void load_weights(std::string pt)
     {
         std::ifstream input(pt, std::ios::binary);
         std::vector<char> bytes(
@@ -263,7 +266,8 @@ struct MobileNetV2 : torch::nn::Module
             std::string model_key4torchvision = ourkey2torchvision(model_key);
             std::cerr << "Searching for: " << model_key4torchvision << ": " << m.value().sizes() << std::endl;
             bool foundit = false;
-            for (auto const &w : weights) {
+            for (auto const &w : weights)
+            {
                 if (model_key4torchvision == w.key())
                 {
                     std::cerr << "Found it: " << w.key() << std::endl;
@@ -272,7 +276,8 @@ struct MobileNetV2 : torch::nn::Module
                     break;
                 }
             }
-            if (!foundit) std::cerr << model_key4torchvision << " could not be found!" << std::endl;
+            if (!foundit)
+                std::cerr << model_key4torchvision << " could not be found!" << std::endl;
         }
     }
 };
