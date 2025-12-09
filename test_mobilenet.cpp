@@ -15,6 +15,17 @@ torch::Tensor preprocess_opencv_bgr(cv::Mat img, int target_w = 224, int target_
     return tensor;
 }
 
+std::vector<std::string> loadLabels(std::string filename)
+{
+    std::vector<std::string> lines;
+    std::ifstream input(filename);
+    for (std::string line; std::getline(input, line);)
+    {
+        lines.push_back(line);
+    }
+    return lines;
+}
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -22,7 +33,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Usage: %s <imagefile>\n", argv[0]);
         return -1;
     }
-    
+
+    auto labels = loadLabels("labels.txt");
+
     torch::manual_seed(1);
     torch::Device device = torch::kCPU; // change to torch::kCUDA if available
 
@@ -42,9 +55,9 @@ int main(int argc, char *argv[])
     input = input.unsqueeze(0);
     torch::Tensor output = model.forward(input);
     output = output.squeeze();
-    
+
     auto idx = output.argmax(0).item<int>();
-    std::cout << "Predicted class: " << idx << " " << std::endl;
+    std::cout << "Predicted class " << idx << ": " << labels[idx] << std::endl;
 
     return 0;
 }
