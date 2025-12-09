@@ -1,11 +1,10 @@
 # mobilenet libtorch
 C++ version of mobilenet using libtorch which can use the pre-trained weights from torchvision.
 
-## Links
+This C++ implementation follows very closely the torchvision one: 
+https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py
 
- - https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py
- - https://docs.pytorch.org/vision/stable/_modules/torchvision/models/mobilenetv2.html
- - https://arxiv.org/pdf/1801.04381
+Mobilenet is described here: https://arxiv.org/pdf/1801.04381
 
 ## Prerequisites Libraries and packages
 
@@ -32,20 +31,28 @@ to compile the library and the demos.
 
 ## How to run
 
-Create the state dictionary which converts the weights from torchvision to a dictionary
-which is readable by C++ (see https://github.com/pytorch/pytorch/issues/36577):
+Get the pretrained weights:
+```
+python get_pretrained_weights.py
+```
+This script downloads the weight file `mobilenet_v2-7ebf99e0.pth` from torchvision and converts its content 
+into a state dict `mobilenet_v2.pt` which can then be loaded into libtorch.
+
+Run this demo which classifies a single image, for example this one:
 
 ```
-wget https://download.pytorch.org/models/mobilenet_v2-b0353104.pth
-python create_dict_from_weights.py
+./demo_mobilenet bird.jpg
 ```
 
-The run the test which tries to classify a single image:
+![alt tag](bird.jpg)
+Phot credit: By Pierre-Selim - Flickr: Pica pica, CC BY-SA 2.0, https://commons.wikimedia.org/w/index.php?curid=19400996
+
+The output should look like this:
 
 ```
-./test_mobilenet myimage.jpg
+Predicted class 18: magpie
 ```
 
 # Credit
 
-Bernd Porr
+(C) 2025 Bernd Porr, GPLv3

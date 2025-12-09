@@ -24,5 +24,5 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 include(GNUInstallDirs)
 
-add_executable (test_mobilenet test_mobilenet.cpp)
-target_link_libraries(test_mobilenet ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES})
+add_executable (demo_mobilenet demo_mobilenet.cpp)
+target_link_libraries(demo_mobilenet ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES})

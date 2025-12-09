@@ -6,6 +6,9 @@
 #include <fstream>
 #include <string>
 #include <regex>
+#include <filesystem>
+#include <iostream>
+#include <system_error>
 
 /***
  * MobileNetV2 C++ Implementation (LibTorch)
@@ -24,7 +27,15 @@ inline torch::Tensor relu6(const torch::Tensor &x)
     return torch::clamp(torch::relu(x), 0, 6);
 }
 
-// make_divisible mirrors torchvision.utils._make_divisible
+/**
+ * @brief Makes a number divisible by a certain divisor
+ * make_divisible mirrors torchvision.utils._make_divisible
+ *
+ * @param v Number to be adjusted to be divisible
+ * @param divisor Divisor which v needs to be divided by
+ * @param min_value Minimum return value
+ * @return int The corrected number which can be divided by divisor.
+ */
 inline int make_divisible(int v, int divisor = 8, int min_value = -1)
 {
     if (min_value < 0)
@@ -35,7 +46,10 @@ inline int make_divisible(int v, int divisor = 8, int min_value = -1)
     return new_v;
 }
 
-// https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
+/**
+ * @brief Module which performs Convolution, Batch Norm and Relu6.
+ * See https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
+ */
 struct Conv2dNormActivation : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
@@ -71,7 +85,10 @@ struct Conv2dNormActivation : torch::nn::Module
     }
 };
 
-// https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L19
+/**
+ * @brief Inverted residual
+ * Converted from https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L19
+ */
 struct InvertedResidual : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
@@ -129,38 +146,49 @@ struct InvertedResidual : torch::nn::Module
     }
 };
 
-// https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L66
+/**
+ * @brief Implementation of MobileNetV2 as done in py-torchvision
+ * See: // https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L66
+ */
 struct MobileNetV2 : torch::nn::Module
 {
     torch::nn::Sequential features{nullptr};
     torch::nn::Sequential classifier{nullptr}; // Dropout + Linear
-    int last_channel;
+    int features_output_channels = 1280;
 
-    MobileNetV2(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8)
+    // MobileNetV2 inverted residual settings:
+    // t, c, n, s  (expansion, output channels, repeats, stride)
+    const std::vector<std::array<int, 4>> inverted_residual_setting = {
+        {1, 16, 1, 1},
+        {6, 24, 2, 2},
+        {6, 32, 3, 2},
+        {6, 64, 4, 2},
+        {6, 96, 3, 1},
+        {6, 160, 3, 2},
+        {6, 320, 1, 1},
+    };
+
+    /**
+     * @brief Construct a new MobileNetV2 object
+     * If you want to load the weights from torchvision into the classifier use the
+     * default values.
+     *
+     * @param num_classes Number of classes
+     * @param width_mult Width multiplier - adjusts number of channels in each layer by this amount
+     * @param round_nearest Round the number of channels in each layer to be a multiple of this number
+     * @param dropout Dropout probability for the dropout layer in the classifier
+     */
+    MobileNetV2(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8, float dropout = 0.2)
     {
-        // MobileNetV2 inverted residual settings:
-        // t, c, n, s  (expansion, output channels, repeats, stride)
-        std::vector<std::array<int, 4>> inverted_residual_setting = {
-            {1, 16, 1, 1},
-            {6, 24, 2, 2},
-            {6, 32, 3, 2},
-            {6, 64, 4, 2},
-            {6, 96, 3, 1},
-            {6, 160, 3, 2},
-            {6, 320, 1, 1},
-        };
-
-        int input_channel = 32;
-        last_channel = 1280;
-
-        input_channel = make_divisible(input_channel * width_mult, round_nearest);
-        last_channel = make_divisible(last_channel * std::max(1.0f, width_mult), round_nearest);
+        int input_channels = 32;
+        input_channels = make_divisible(input_channels * width_mult, round_nearest);
+        features_output_channels = make_divisible(features_output_channels * std::max(1.0f, width_mult), round_nearest);
 
         features = torch::nn::Sequential();
 
         features->push_back(
             Conv2dNormActivation(3,
-                                 input_channel,
+                                 input_channels,
                                  /*kernel_size=*/3,
                                  /*stride =*/2));
 
@@ -177,25 +205,43 @@ struct MobileNetV2 : torch::nn::Module
             {
                 int stride = (i == 0) ? s : 1;
                 features->push_back(
-                    InvertedResidual(input_channel, output_channel, stride, t));
-                input_channel = output_channel;
+                    InvertedResidual(input_channels, output_channel, stride, t));
+                input_channels = output_channel;
             }
         }
 
         features->push_back(
-            Conv2dNormActivation(input_channel,
-                                 last_channel,
+            Conv2dNormActivation(input_channels,
+                                 features_output_channels,
                                  /*kernel_size=*/1));
 
         register_module("features", features);
 
         // classifier: Dropout + Linear
         classifier = torch::nn::Sequential();
-        classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(/*p=*/0.2)));
-        classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(last_channel, num_classes)));
+        classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(dropout)));
+        classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(features_output_channels, num_classes)));
         register_module("classifier", classifier);
     }
 
+    /**
+     * @brief Gets the number of input channels for the classfier
+     * This will make it easy to replace the classifier with anything the user wants
+     * by creating their own torch::nn::Sequential() for the classifier.
+     *
+     * @return int The number of intput channels to the classifer class "classfier".
+     */
+    int getNinputChannels4Classifier() const
+    {
+        return features_output_channels;
+    }
+
+    /**
+     * @brief Performs the forward pass
+     *
+     * @param x The batch of input images.
+     * @return torch::Tensor The category scores for the different labels.
+     */
     torch::Tensor forward(torch::Tensor x)
     {
         x = features->forward(x);
@@ -206,9 +252,11 @@ struct MobileNetV2 : torch::nn::Module
         return x;
     }
 
+    /**
+     * @brief Initialize conv/bn/linear similar to torchvision defaults
+     */
     void initialize_weights()
     {
-        // Initialize conv/bn/linear similar to torchvision defaults
         for (auto &module : modules(/*include_self=*/false))
         {
             if (auto M = dynamic_cast<torch::nn::Conv2dImpl *>(module.get()))
@@ -230,7 +278,12 @@ struct MobileNetV2 : torch::nn::Module
         }
     }
 
-    // renames the keys here so that they match the python torchvision naming convention
+    /**
+     * @brief Renames the libtorch keys here so that they match the python torchvision naming convention
+     * 
+     * @param k Libtorch key
+     * @return std::string torchvision key
+     */
     std::string ourkey2torchvision(std::string k)
     {
         // called simply "conv" in the weights file
@@ -242,9 +295,15 @@ struct MobileNetV2 : torch::nn::Module
     }
 
     // https://github.com/pytorch/pytorch/issues/36577
+    /**
+     * @brief Loads a .pt weight file containing a dic with key/parameter pairs
+     * 
+     * @param pt filename of the .pt weight file
+     */
     void load_weights(std::string pt)
     {
         std::ifstream input(pt, std::ios::binary);
+        input.exceptions(input.failbit);
         std::vector<char> bytes(
             (std::istreambuf_iterator<char>(input)),
             (std::istreambuf_iterator<char>()));
