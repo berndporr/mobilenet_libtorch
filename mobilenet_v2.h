@@ -250,11 +250,10 @@ struct MobileNetV2 : torch::nn::Module
             (std::istreambuf_iterator<char>()));
         input.close();
         c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();
-        const torch::OrderedDict<std::string, at::Tensor> &model_params = named_parameters();
         if (debugOutput)
         {
             std::cerr << "Parameters we have in this model here: " << std::endl;
-            for (auto const &m : model_params)
+            for (auto const &m : named_parameters())
             {
                 auto k = ourkey2torchvision(m.key());
                 std::cerr << m.key() << "->" << k << ": " << m.value().sizes() << std::endl;
@@ -273,7 +272,7 @@ struct MobileNetV2 : torch::nn::Module
         torch::NoGradGuard no_grad;
         if (debugOutput)
             std::cerr << "Loading weights" << std::endl;
-        for (auto &m : model_params)
+        for (auto &m : named_parameters())
         {
             std::string model_key = m.key();
             std::string model_key4torchvision = ourkey2torchvision(model_key);
