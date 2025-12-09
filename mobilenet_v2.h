@@ -7,11 +7,16 @@
 #include <string>
 #include <regex>
 
-/*
-  MobileNetV2 C++ Implementation (LibTorch)
-  - InvertedResidual block
-  - MobileNetV2 module
-*/
+/***
+ * MobileNetV2 C++ Implementation (LibTorch)
+ * Which is also able to load the pre-trained weights from torchvision.
+ ***/
+
+#ifdef NDEBUG
+constexpr bool debugOutput = false;
+#else
+constexpr bool debugOutput = true;
+#endif
 
 inline torch::Tensor relu6(const torch::Tensor &x)
 {
@@ -26,7 +31,6 @@ inline int make_divisible(int v, int divisor = 8, int min_value = -1)
     int new_v = std::max(min_value, ((int)(((int)(v + divisor / 2)) / divisor)) * divisor);
     if (new_v < (0.9 * (float)v))
         new_v += divisor;
-    std::cerr << "----------" << new_v << "------------" << std::endl;
     return new_v;
 }
 
@@ -55,7 +59,7 @@ struct Conv2dNormActivation : torch::nn::Module
                 .padding(padding)
                 .groups(groups)
                 .bias(false)));
-        conv->push_back(torch::nn::BatchNorm2d(out_channels));
+        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels).track_running_stats(true)));
         conv->push_back(torch::nn::Functional(relu6));
         register_module(className, conv);
     }
@@ -106,7 +110,7 @@ struct InvertedResidual : torch::nn::Module
                 .stride(1)
                 .padding(0)
                 .bias(false)));
-        conv->push_back(torch::nn::BatchNorm2d(oup));
+        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup).track_running_stats(true)));
 
         register_module(className, conv);
     }
@@ -153,13 +157,12 @@ struct MobileNetV2 : torch::nn::Module
 
         features = torch::nn::Sequential();
 
-        features->push_back("0",
-                            Conv2dNormActivation(3,
-                                                 input_channel,
-                                                 /*kernel_size=*/3,
-                                                 /*stride =*/2));
+        features->push_back(
+            Conv2dNormActivation(3,
+                                 input_channel,
+                                 /*kernel_size=*/3,
+                                 /*stride =*/2));
 
-        int j = 1;
         // inverted residual blocks
         for (const auto &cfg : inverted_residual_setting)
         {
@@ -172,23 +175,23 @@ struct MobileNetV2 : torch::nn::Module
             for (int i = 0; i < n; ++i)
             {
                 int stride = (i == 0) ? s : 1;
-                features->push_back(std::to_string(j++),
-                                    InvertedResidual(input_channel, output_channel, stride, t));
+                features->push_back(
+                    InvertedResidual(input_channel, output_channel, stride, t));
                 input_channel = output_channel;
             }
         }
 
-        features->push_back(std::to_string(j++),
-                            Conv2dNormActivation(input_channel,
-                                                 last_channel,
-                                                 /*kernel_size=*/1));
+        features->push_back(
+            Conv2dNormActivation(input_channel,
+                                 last_channel,
+                                 /*kernel_size=*/1));
 
         register_module("features", features);
 
         // classifier: Dropout + Linear
         classifier = torch::nn::Sequential();
-        classifier->push_back("0", torch::nn::Dropout(torch::nn::DropoutOptions(/*p=*/0.2)));
-        classifier->push_back("1", torch::nn::Linear(torch::nn::LinearOptions(last_channel, num_classes)));
+        classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(/*p=*/0.2)));
+        classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(last_channel, num_classes)));
         register_module("classifier", classifier);
     }
 
@@ -247,37 +250,71 @@ struct MobileNetV2 : torch::nn::Module
         input.close();
         c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();
         const torch::OrderedDict<std::string, at::Tensor> &model_params = named_parameters();
-        std::cerr << "Parameters we have in this model here: " << std::endl;
-        for (auto const &m : model_params)
+        if (debugOutput)
         {
-            auto k = ourkey2torchvision(m.key());
-            std::cerr << m.key() << "->" << k << ": " << m.value().sizes() << std::endl;
-        }
-        std::cerr << "Parameters we have in the weight file " << pt << ":" << std::endl;
-        for (auto const &w : weights)
-        {
-            std::cerr << w.key() << ": " << w.value().toTensor().sizes() << std::endl;
+            std::cerr << "Parameters we have in this model here: " << std::endl;
+            for (auto const &m : model_params)
+            {
+                auto k = ourkey2torchvision(m.key());
+                std::cerr << m.key() << "->" << k << ": " << m.value().sizes() << std::endl;
+            }
+            std::cerr << "Named buffers we have in this model here: " << std::endl;
+            for (auto &b : named_buffers())
+            {
+                std::cout << b.key() << "\n";
+            }
+            std::cerr << "Parameters we have in the weight file " << pt << ":" << std::endl;
+            for (auto const &w : weights)
+            {
+                std::cerr << w.key() << ": " << w.value().toTensor().sizes() << std::endl;
+            }
         }
         torch::NoGradGuard no_grad;
-        std::cerr << "Loading weights" << std::endl;
+        if (debugOutput)
+            std::cerr << "Loading weights" << std::endl;
         for (auto &m : model_params)
         {
             std::string model_key = m.key();
             std::string model_key4torchvision = ourkey2torchvision(model_key);
-            std::cerr << "Searching for: " << model_key4torchvision << ": " << m.value().sizes() << std::endl;
+            if (debugOutput)
+                std::cerr << "Searching for: " << model_key4torchvision << ": " << m.value().sizes() << std::endl;
             bool foundit = false;
             for (auto const &w : weights)
             {
                 if (model_key4torchvision == w.key())
                 {
-                    std::cerr << "Found it: " << w.key() << std::endl;
+                    if (debugOutput)
+                        std::cerr << "Found it: " << w.key() << std::endl;
                     m.value().copy_(w.value().toTensor());
                     foundit = true;
                     break;
                 }
             }
             if (!foundit)
-                std::cerr << model_key4torchvision << " could not be found!" << std::endl;
+                std::cerr << "Key: " << model_key4torchvision << " could not be found!" << std::endl;
+        }
+        if (debugOutput)
+            std::cerr << "Loading named buffers" << std::endl;
+        for (auto &b : named_buffers())
+        {
+            std::string model_key = b.key();
+            std::string model_key4torchvision = ourkey2torchvision(model_key);
+            if (debugOutput)
+                std::cerr << "Searching for: " << model_key4torchvision << ": " << b.value().sizes() << std::endl;
+            bool foundit = false;
+            for (auto const &w : weights)
+            {
+                if (model_key4torchvision == w.key())
+                {
+                    if (debugOutput)
+                        std::cerr << "Found it: " << w.key() << std::endl;
+                    b.value().copy_(w.value().toTensor());
+                    foundit = true;
+                    break;
+                }
+            }
+            if (!foundit)
+                std::cerr << "Key: " << model_key4torchvision << " could not be found!" << std::endl;
         }
     }
 };
