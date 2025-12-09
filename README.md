@@ -1,5 +1,5 @@
-# mobilenet_libtorch
-C++ version of mobilenet using libtorch (work in progress)
+# mobilenet libtorch
+C++ version of mobilenet using libtorch which can use the pre-trained weights from torchvision.
 
 ## Links
 
@@ -36,6 +36,7 @@ Create the state dictionary which converts the weights from torchvision to a dic
 which is readable by C++ (see https://github.com/pytorch/pytorch/issues/36577):
 
 ```
+wget https://download.pytorch.org/models/mobilenet_v2-b0353104.pth
 python create_dict_from_weights.py
 ```
 
@@ -44,3 +45,7 @@ The run the test which tries to classify a single image:
 ```
 ./test_mobilenet myimage.jpg
 ```
+
+# Credit
+
+Bernd Porr

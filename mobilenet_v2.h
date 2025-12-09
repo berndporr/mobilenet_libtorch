@@ -9,7 +9,8 @@
 
 /***
  * MobileNetV2 C++ Implementation (LibTorch)
- * Which is also able to load the pre-trained weights from torchvision.
+ * Which is able to load the pre-trained weights from torchvision
+ * (c) 2025 Bernd Porr, GPLv3
  ***/
 
 #ifdef NDEBUG
