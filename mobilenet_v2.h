@@ -259,9 +259,10 @@ struct MobileNetV2 : torch::nn::Module
                 std::cerr << m.key() << "->" << k << ": " << m.value().sizes() << std::endl;
             }
             std::cerr << "Named buffers we have in this model here: " << std::endl;
-            for (auto &b : named_buffers())
+            for (const auto &b : named_buffers())
             {
-                std::cout << b.key() << "\n";
+                auto k = ourkey2torchvision(b.key());
+                std::cout << b.key() << "->" << k << ": " << b.value().sizes() << std::endl;
             }
             std::cerr << "Parameters we have in the weight file " << pt << ":" << std::endl;
             for (auto const &w : weights)
