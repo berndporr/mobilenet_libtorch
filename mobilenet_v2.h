@@ -74,7 +74,7 @@ struct Conv2dNormActivation : torch::nn::Module
                 .padding(padding)
                 .groups(groups)
                 .bias(false)));
-        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels).track_running_stats(true)));
+        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));
         conv->push_back(torch::nn::Functional(relu6));
         register_module(className, conv);
     }
@@ -101,7 +101,7 @@ struct InvertedResidual : torch::nn::Module
         {
             throw "Stride needs to be 1 or 2.";
         }
-        int hidden_dim = (int)round(inp * expand_ratio);
+        const int hidden_dim = (int)round(inp * expand_ratio);
         use_res_connect = (stride == 1) && (inp == oup);
 
         conv = torch::nn::Sequential();
@@ -128,7 +128,7 @@ struct InvertedResidual : torch::nn::Module
                 .stride(1)
                 .padding(0)
                 .bias(false)));
-        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup).track_running_stats(true)));
+        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));
 
         register_module(className, conv);
     }
@@ -195,15 +195,15 @@ struct MobileNetV2 : torch::nn::Module
         // inverted residual blocks
         for (const auto &cfg : inverted_residual_setting)
         {
-            int t = cfg[0];
-            int c = cfg[1];
-            int n = cfg[2];
-            int s = cfg[3];
+            const int t = cfg[0];
+            const int c = cfg[1];
+            const int n = cfg[2];
+            const int s = cfg[3];
 
             int output_channel = make_divisible(c * width_mult, round_nearest);
             for (int i = 0; i < n; ++i)
             {
-                int stride = (i == 0) ? s : 1;
+                const int stride = (i == 0) ? s : 1;
                 features->push_back(
                     InvertedResidual(input_channels, output_channel, stride, t));
                 input_channels = output_channel;
@@ -278,13 +278,7 @@ struct MobileNetV2 : torch::nn::Module
         }
     }
 
-    /**
-     * @brief Renames the libtorch keys here so that they match the python torchvision naming convention
-     * 
-     * @param k Libtorch key
-     * @return std::string torchvision key
-     */
-    std::string ourkey2torchvision(std::string k)
+    std::string ourkey2torchvision(std::string k) const
     {
         // called simply "conv" in the weights file
         k = std::regex_replace(k, std::regex(InvertedResidual::className), "conv");
@@ -294,10 +288,10 @@ struct MobileNetV2 : torch::nn::Module
         return k;
     }
 
-    // https://github.com/pytorch/pytorch/issues/36577
     /**
      * @brief Loads a .pt weight file containing a dic with key/parameter pairs
-     * 
+     * See https://github.com/pytorch/pytorch/issues/36577
+     *
      * @param pt filename of the .pt weight file
      */
     void load_weights(std::string pt)
@@ -308,7 +302,7 @@ struct MobileNetV2 : torch::nn::Module
             (std::istreambuf_iterator<char>(input)),
             (std::istreambuf_iterator<char>()));
         input.close();
-        c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();
+        const c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();
         if (debugOutput)
         {
             std::cerr << "Parameters we have in this model here: " << std::endl;
@@ -334,8 +328,8 @@ struct MobileNetV2 : torch::nn::Module
             std::cerr << "Loading weights" << std::endl;
         for (auto &m : named_parameters())
         {
-            std::string model_key = m.key();
-            std::string model_key4torchvision = ourkey2torchvision(model_key);
+            const std::string model_key = m.key();
+            const std::string model_key4torchvision = ourkey2torchvision(model_key);
             if (debugOutput)
                 std::cerr << "Searching for: " << model_key4torchvision << ": " << m.value().sizes() << std::endl;
             bool foundit = false;
