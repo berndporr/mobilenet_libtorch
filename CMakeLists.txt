@@ -28,3 +28,11 @@ include(GNUInstallDirs)
 
 add_executable (demo_mobilenet demo_mobilenet.cpp)
 target_link_libraries(demo_mobilenet ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_library(torch-mobilenetv2 INTERFACE)
+target_include_directories(torch-mobilenetv2 INTERFACE .)
+
+set_property(TARGET torch-mobilenetv2
+  PROPERTY PUBLIC_HEADER mobilenet_v2.h)
+
+install(TARGETS torch-mobilenetv2 PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")

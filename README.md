@@ -1,7 +1,7 @@
-# mobilenet libtorch
-C++ version of mobilenet using libtorch which can use the pre-trained weights from torchvision.
+# MobileNet libtorch
+C++ version of mobilenet using libtorch which can import the pre-trained weights from torchvision.
 
-This C++ implementation follows very closely the torchvision one: 
+This implementation follows very closely the torchvision one: 
 https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py
 
 Mobilenet is described here: https://arxiv.org/pdf/1801.04381
@@ -29,14 +29,15 @@ make
 ```
 to compile the library and the demos.
 
-## How to run
+## Constructive example
 
-Get the pretrained weights:
+Get the pretrained weights by running this python script:
 ```
 python get_pretrained_weights.py
 ```
-This script downloads the weight file `mobilenet_v2-7ebf99e0.pth` from torchvision and converts its content 
-into a state dict `mobilenet_v2.pt` which can then be loaded into libtorch.
+It downloads the weight file `mobilenet_v2-7ebf99e0.pth` from torchvision 
+and converts its content into the state dict `mobilenet_v2.pt` 
+which can then be loaded into the classifier via `load_weights`.
 
 Run this demo which classifies a single image, for example this one:
 
@@ -52,6 +53,16 @@ The output should look like this:
 ```
 Predicted class 18: magpie
 ```
+
+## Installation
+
+All functionality is included in the single header file `mobilenet_v2.h`. To install it
+just type:
+```
+sudo make install
+```
+
+Then simply include `mobilenet_v2.h` into your own project.
 
 # Credit
 
