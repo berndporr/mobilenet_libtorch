@@ -64,6 +64,6 @@ sudo make install
 
 Then simply include `mobilenet_v2.h` into your own project.
 
-# Credit
+## Credit
 
 (C) 2025 Bernd Porr, GPLv3
