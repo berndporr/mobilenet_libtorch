@@ -1,10 +1,11 @@
-# MobileNet libtorch
-C++ version of mobilenet using libtorch which can import the pre-trained weights from torchvision.
+# MobileNetV2 libtorch
+C++ version of MobileNetV2 using libtorch which can import the pre-trained weights from torchvision.
 
-This implementation follows very closely the torchvision one: 
-https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py
+Importing the weights instead of using the JIT has the advantage that one can do transfer learning also on an edge device, for example, to adapt to different situations locally.
 
-Mobilenet is described here: https://arxiv.org/pdf/1801.04381
+This implementation follows very closely the [torchvision implementation of mobilenet v2](https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py).
+
+Mobilenet is described [here](https://arxiv.org/pdf/1801.04381).
 
 ## Prerequisites Libraries and packages
 
@@ -46,7 +47,7 @@ Run this demo which classifies a single image, for example this one:
 ```
 
 ![alt tag](bird.jpg)
-Phot credit: By Pierre-Selim - Flickr: Pica pica, CC BY-SA 2.0, https://commons.wikimedia.org/w/index.php?curid=19400996
+[Phot credit: By Pierre-Selim - Flickr: Pica pica, CC BY-SA 2.0](https://commons.wikimedia.org/w/index.php?curid=19400996)
 
 The output should look like this:
 
@@ -66,4 +67,4 @@ Then simply include `mobilenet_v2.h` into your own project.
 
 ## Credit
 
-(C) 2025 Bernd Porr, GPLv3
+(C) 2025 [Bernd Porr](https://www.berndporr.me.uk/), GPLv3
