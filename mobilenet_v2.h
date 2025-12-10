@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <iostream>
 #include <system_error>
+#include <opencv2/opencv.hpp>
 
 /***
  * MobileNetV2 C++ Implementation (LibTorch)
@@ -370,5 +371,43 @@ struct MobileNetV2 : torch::nn::Module
             if (!foundit)
                 std::cerr << "Key: " << model_key4torchvision << " could not be found!" << std::endl;
         }
+    }
+
+    /**
+     * @brief Preprocessing of an openCV image for inference or learning
+     * The images are resized to 256x256, followed by a central crop of 224x224. 
+     * Finally the values are first rescaled to [0.0, 1.0] 
+     * and then normalized using mean=[0.485, 0.456, 0.406] and std=[0.229, 0.224, 0.225].
+     * 
+     * @param img 8bit BGR openCV image with an aspect ratio of 1:1
+     * @param resizeOnly If true the image is only resized to 224x224 but not cropped. Default: false.
+     * @return torch::Tensor The image as a tensor ready to be used for inference and learning.
+     */
+    torch::Tensor preprocess(cv::Mat img, bool resizeOnly = false) const
+    {
+        constexpr int imageSizeBeforeCrop = 256;
+        constexpr int finalImageSize = 224;
+        constexpr int numChannels = 3; // colour
+
+        if (img.depth() != CV_8U) throw std::invalid_argument("Image is not 8bit.");
+        if (img.channels() != numChannels) throw std::invalid_argument("Image is not BGR / colour.");
+
+        if (resizeOnly)
+        {
+            cv::resize(img, img, cv::Size(finalImageSize,finalImageSize));
+        }
+        else
+        {
+            cv::resize(img, img, cv::Size(imageSizeBeforeCrop, imageSizeBeforeCrop));
+            constexpr int start = (imageSizeBeforeCrop - finalImageSize) / 2;
+            const cv::Rect roi(start, start, finalImageSize, finalImageSize);
+            img = img(roi).clone();
+        }
+        cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+
+        torch::Tensor tensor = torch::from_blob(img.data, {img.rows, img.cols, 3}, torch::kByte);
+        tensor = tensor.permute({2, 0, 1}).to(torch::kFloat).div_(255.0);
+        tensor = torch::data::transforms::Normalize({0.485, 0.456, 0.406}, {0.229, 0.224, 0.225})(tensor);
+        return tensor;
     }
 };

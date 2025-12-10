@@ -2,19 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-torch::Tensor preprocess_opencv_bgr(cv::Mat img, int target_w = 224, int target_h = 224)
-{
-    cv::resize(img, img, cv::Size(target_w, target_h));
-    // Convert BGR -> RGB
-    cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
-
-    // Convert to float and to tensor
-    torch::Tensor tensor = torch::from_blob(img.data, {img.rows, img.cols, 3}, torch::kByte);
-    tensor = tensor.permute({2, 0, 1}).to(torch::kFloat).div_(255.0);
-    tensor = torch::data::transforms::Normalize({0.485, 0.456, 0.406}, {0.229, 0.224, 0.225})(tensor);
-    return tensor;
-}
-
 std::vector<std::string> loadLabels(std::string filename)
 {
     std::vector<std::string> lines;
@@ -50,7 +37,7 @@ int main(int argc, char *argv[])
         std::cerr << "Failed to open the image.\n";
         return -1;
     }
-    torch::Tensor input = preprocess_opencv_bgr(img).to(device);
+    torch::Tensor input = model.preprocess(img).to(device);
 
     input = input.unsqueeze(0);
     torch::Tensor output = model.forward(input);
