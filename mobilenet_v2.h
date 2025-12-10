@@ -23,30 +23,6 @@ constexpr bool debugOutput = false;
 constexpr bool debugOutput = true;
 #endif
 
-inline torch::Tensor relu6(const torch::Tensor &x)
-{
-    return torch::clamp(torch::relu(x), 0, 6);
-}
-
-/**
- * @brief Makes a number divisible by a certain divisor
- * make_divisible mirrors torchvision.utils._make_divisible
- *
- * @param v Number to be adjusted to be divisible
- * @param divisor Divisor which v needs to be divided by
- * @param min_value Minimum return value
- * @return int The corrected number which can be divided by divisor.
- */
-inline int make_divisible(int v, int divisor = 8, int min_value = -1)
-{
-    if (min_value < 0)
-        min_value = divisor;
-    int new_v = std::max(min_value, ((int)(((int)(v + divisor / 2)) / divisor)) * divisor);
-    if (new_v < (0.9 * (float)v))
-        new_v += divisor;
-    return new_v;
-}
-
 /**
  * @brief Module which performs Convolution, Batch Norm and Relu6.
  * See https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
@@ -55,6 +31,11 @@ struct Conv2dNormActivation : torch::nn::Module
 {
     torch::nn::Sequential conv{nullptr};
     static constexpr char className[] = "Conv2dNormActivation";
+
+    static inline torch::Tensor relu6(const torch::Tensor &x)
+    {
+        return torch::clamp(torch::relu(x), 0, 6);
+    }
 
     Conv2dNormActivation(int in_channels,
                          int out_channels,
@@ -100,7 +81,7 @@ struct InvertedResidual : torch::nn::Module
     {
         if ((stride < 1) || (stride > 2))
         {
-            throw "Stride needs to be 1 or 2.";
+            throw std::invalid_argument("Stride needs to be 1 or 2.");
         }
         const int hidden_dim = (int)round(inp * expand_ratio);
         use_res_connect = (stride == 1) && (inp == oup);
@@ -375,10 +356,10 @@ struct MobileNetV2 : torch::nn::Module
 
     /**
      * @brief Preprocessing of an openCV image for inference or learning
-     * The images are resized to 256x256, followed by a central crop of 224x224. 
-     * Finally the values are first rescaled to [0.0, 1.0] 
+     * The images are resized to 256x256, followed by a central crop of 224x224.
+     * Finally the values are first rescaled to [0.0, 1.0]
      * and then normalized using mean=[0.485, 0.456, 0.406] and std=[0.229, 0.224, 0.225].
-     * 
+     *
      * @param img 8bit BGR openCV image with an aspect ratio of 1:1
      * @param resizeOnly If true the image is only resized to 224x224 but not cropped. Default: false.
      * @return torch::Tensor The image as a tensor ready to be used for inference and learning.
@@ -389,12 +370,14 @@ struct MobileNetV2 : torch::nn::Module
         constexpr int finalImageSize = 224;
         constexpr int numChannels = 3; // colour
 
-        if (img.depth() != CV_8U) throw std::invalid_argument("Image is not 8bit.");
-        if (img.channels() != numChannels) throw std::invalid_argument("Image is not BGR / colour.");
+        if (img.depth() != CV_8U)
+            throw std::invalid_argument("Image is not 8bit.");
+        if (img.channels() != numChannels)
+            throw std::invalid_argument("Image is not BGR / colour.");
 
         if (resizeOnly)
         {
-            cv::resize(img, img, cv::Size(finalImageSize,finalImageSize));
+            cv::resize(img, img, cv::Size(finalImageSize, finalImageSize));
         }
         else
         {
@@ -409,5 +392,15 @@ struct MobileNetV2 : torch::nn::Module
         tensor = tensor.permute({2, 0, 1}).to(torch::kFloat).div_(255.0);
         tensor = torch::data::transforms::Normalize({0.485, 0.456, 0.406}, {0.229, 0.224, 0.225})(tensor);
         return tensor;
+    }
+
+    inline int make_divisible(int v, int divisor = 8, int min_value = -1) const
+    {
+        if (min_value < 0)
+            min_value = divisor;
+        int new_v = std::max(min_value, ((int)(((int)(v + divisor / 2)) / divisor)) * divisor);
+        if (new_v < (0.9 * (float)v))
+            new_v += divisor;
+        return new_v;
     }
 };
