@@ -98,9 +98,6 @@ int main() {
 
     for (size_t epoch = 1; epoch <= epochs; epoch++) {
         model.train();
-        size_t batch_index = 0;
-        double running_loss = 0.0;
-
         for (auto& batch : *loader) {
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);
@@ -110,21 +107,12 @@ int main() {
             auto loss = criterion(output, target);
             loss.backward();
             optimizer.step();
-
-            running_loss += loss.item<double>();
-            batch_index++;
-
-            if (batch_index % 8 == 0) {
-                std::cout << "Epoch [" << epoch << "/" << epochs << "], Batch "
-                          << batch_index << ", Loss: " << loss.item<double>() << "\n";
+	    std::cout << "Epoch [" << epoch << "/" << epochs << "], Loss: "
+		      << loss.item<double>() << "\r" << std::flush;
             }
+	std::cout << std::endl;
         }
-
-        std::cout << "Epoch " << epoch << " average loss = "
-                  << running_loss / batch_index << "\n";
-
-    }
-
     std::cout << "Done.\n";
     return 0;
 }
+
