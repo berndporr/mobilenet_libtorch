@@ -364,7 +364,7 @@ struct MobileNetV2 : torch::nn::Module
      * @param resizeOnly If true the image is only resized to 224x224 but not cropped. Default: false.
      * @return torch::Tensor The image as a tensor ready to be used for inference and learning.
      */
-    torch::Tensor preprocess(cv::Mat img, bool resizeOnly = false) const
+    static torch::Tensor preprocess(cv::Mat img, bool resizeOnly = false)
     {
         constexpr int imageSizeBeforeCrop = 256;
         constexpr int finalImageSize = 224;
