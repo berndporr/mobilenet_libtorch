@@ -6,38 +6,46 @@
 #include <iostream>
 #include <unistd.h>
 #include <pwd.h>
+#include <iostream>
+#include <fstream>
 
 namespace fs = std::filesystem;
-
-// ~/.cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat\ vs\ Dog/train/
 
 // -------------------------
 // Dataset implementation
 // -------------------------
-struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset> {
-    struct Sample {
+struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
+{
+    struct Sample
+    {
         std::string image_path;
         int label;
     };
 
     std::vector<Sample> samples;
 
-    ImageFolderDataset(const std::string& root, const std::vector<std::string>& classes) {
-        for (size_t label = 0; label < classes.size(); label++) {
+    ImageFolderDataset(const std::string &root, const std::vector<std::string> &classes)
+    {
+        for (size_t label = 0; label < classes.size(); label++)
+        {
             fs::path class_path = fs::path(root) / classes[label];
-            for (auto& p : fs::directory_iterator(class_path)) {
-                if (p.is_regular_file()) {
-                    samples.push_back({ p.path().string(), (int)label });
+            for (auto &p : fs::directory_iterator(class_path))
+            {
+                if (p.is_regular_file())
+                {
+                    samples.push_back({p.path().string(), (int)label});
                 }
             }
         }
         std::cout << "Loaded " << samples.size() << " samples from " << root << "\n";
     }
 
-    torch::data::Example<> get(size_t idx) override {
-        const auto& sample = samples[idx];
-	cv::Mat img = cv::imread(sample.image_path);
-        if (img.empty()) {
+    torch::data::Example<> get(size_t idx) override
+    {
+        const auto &sample = samples[idx];
+        cv::Mat img = cv::imread(sample.image_path);
+        if (img.empty())
+        {
             throw std::runtime_error("Failed to load image: " + sample.image_path);
         }
         torch::Tensor data = MobileNetV2::preprocess(img);
@@ -45,25 +53,37 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset> {
         return {data, label};
     }
 
-    torch::optional<size_t> size() const override {
+    torch::optional<size_t> size() const override
+    {
         return samples.size();
     }
 };
 
-std::string root = "/.cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
+// location of the Kaggle dataset
+const std::string root = "/.cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
+
+void progress(int epoch, int epochs, double loss)
+{
+    std::cout << "Epoch [" << epoch << "/" << epochs << "], Loss: "
+              << loss << "\r" << std::flush;
+}
 
 // -------------------------
 // Main training program
 // -------------------------
-int main() {
+int main()
+{
     torch::manual_seed(42);
     torch::Device device(torch::kCPU);
+    if (torch::cuda::is_available())
+    {
+        const torch::DeviceType device_type = torch::kCUDA;
+        device = torch::Device(device_type);
+    }
 
     std::vector<std::string> classes = {"Cat", "Dog"};
-
     std::string homedir(getpwuid(getuid())->pw_dir);
-
-    ImageFolderDataset ds(homedir+root, classes);
+    ImageFolderDataset ds(homedir + root, classes);
 
     const size_t batch_size = 32;
 
@@ -77,14 +97,15 @@ int main() {
     MobileNetV2 model;
     model.load_weights("../mobilenet_v2.pt");
 
+    // replace the standard classifier by a custom one with
+    // only two categories for cats and dogs
     model.classifier = torch::nn::Sequential(
-	torch::nn::Dropout(0.2),
-	torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size())
-	);
+        torch::nn::Dropout(0.2),
+        torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
     model.to(device);
 
-    // Freeze backbone
-    for (auto& p : model.features->parameters())
+    // Freeze the feature detectors
+    for (auto &p : model.features->parameters())
         p.requires_grad_(false);
 
     // Optimizer only for classifier
@@ -96,9 +117,16 @@ int main() {
     // -------------------------
     const size_t epochs = 5;
 
-    for (size_t epoch = 1; epoch <= epochs; epoch++) {
+    std::fstream floss;
+    floss.open("loss.dat",std::fstream::out);
+
+    for (size_t epoch = 1; epoch <= epochs; epoch++)
+    {
+        float cumloss = 0;
+        int n = 0;
         model.train();
-        for (auto& batch : *loader) {
+        for (auto &batch : *loader)
+        {
             auto data = batch.data.to(device);
             auto target = batch.target.to(device);
 
@@ -107,12 +135,14 @@ int main() {
             auto loss = criterion(output, target);
             loss.backward();
             optimizer.step();
-	    std::cout << "Epoch [" << epoch << "/" << epochs << "], Loss: "
-		      << loss.item<double>() << "\r" << std::flush;
-            }
-	std::cout << std::endl;
+            progress(epoch, epochs, loss.item<double>());
+            cumloss += loss.item<double>();
+            floss << loss.item<double>() << std::endl;
+            n++;
         }
+        progress(epoch, epochs, cumloss / (double)n);
+        std::cout << std::endl;
+    }
     std::cout << "Done.\n";
     return 0;
 }
-
