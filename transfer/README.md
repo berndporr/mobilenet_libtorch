@@ -24,8 +24,8 @@ make
 The output is the current training loss to show that its converging:
 
 ```
-Epoch [1/5], Loss: 0.409403
-Epoch [2/5], Loss: 0.268874
+Epoch [1/50], Loss: 0.409403
+Epoch [2/50], Loss: 0.268874
 ```
 
 The loss is saved into the file `loss.dat`.
