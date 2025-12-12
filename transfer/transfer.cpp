@@ -139,10 +139,11 @@ int main()
             optimizer.step();
             progress(epoch, epochs, loss.item<double>());
             cumloss += loss.item<double>();
-            floss << loss.item<double>() << std::endl;
             n++;
         }
-        progress(epoch, epochs, cumloss / (double)n);
+	const double avgLoss = cumloss / (double)n;
+        progress(epoch, epochs, avgLoss);
+	floss << avgLoss << std::endl;
         std::cout << std::endl;
     }
     std::cout << "Done.\n";
