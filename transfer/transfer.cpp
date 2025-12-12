@@ -117,7 +117,7 @@ int main()
     // -------------------------
     // Training loop
     // -------------------------
-    const size_t epochs = 5;
+    const size_t epochs = 50;
 
     std::fstream floss;
     floss.open("loss.dat",std::fstream::out);
