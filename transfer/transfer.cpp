@@ -81,12 +81,14 @@ int main()
         device = torch::Device(device_type);
     }
 
-    std::vector<std::string> classes = {"Cat", "Dog"};
-    fs::path homedir(getpwuid(getuid())->pw_dir);
+    const std::vector<std::string> classes = {"Cat", "Dog"};
+    const fs::path homedir(getpwuid(getuid())->pw_dir);
     ImageFolderDataset ds(homedir / root, classes);
 
     const int batch_size = 32;
 
+    // Creates a DataLoader instance for a stateless dataset.
+    // The sampler is RandomSampler = shuffling is enabled.
     auto loader = torch::data::make_data_loader(
         ds.map(torch::data::transforms::Stack<>()),
         torch::data::DataLoaderOptions().batch_size(batch_size));
@@ -97,12 +99,12 @@ int main()
     MobileNetV2 model;
     model.load_weights("../mobilenet_v2.pt");
 
-    // replace the standard classifier by a custom one with
+    // Replace the standard classifier by a custom one with
     // only two categories for cats and dogs
     model.classifier = torch::nn::Sequential(
         torch::nn::Dropout(0.2),
         torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
-    model.replace_module("classifier", model.classifier);
+    model.replace_module(MobileNetV2::classifierModuleName, model.classifier);
 
     // Freeze the feature detectors
     for (auto &p : model.features->parameters())
@@ -144,7 +146,7 @@ int main()
 	const double avgLoss = cumloss / (double)n;
         progress(epoch, epochs, avgLoss);
 	floss << epoch << "\t" << avgLoss << std::endl;
-        std::cout << std::endl;
+        std::cout << std::endl << std::flush;
     }
     std::cout << "Done.\n";
     return 0;

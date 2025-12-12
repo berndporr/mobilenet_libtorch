@@ -150,10 +150,20 @@ struct MobileNetV2 : torch::nn::Module
         {6, 320, 1, 1},
     };
 
+    // Module name of the feature detector.
+    static constexpr char featuresModuleName[] = "features";
+
+    /**
+     * @brief Name of the classifier module.
+     * The name of the classifier module is needed whne replacing
+     * the default classifier.
+     */
+    static constexpr char classifierModuleName[] = "classifier";
+
     /**
      * @brief Construct a new MobileNetV2 object
      * If you want to load the weights from torchvision into the classifier use the
-     * default values.
+     * default values for the parameters.
      *
      * @param num_classes Number of classes
      * @param width_mult Width multiplier - adjusts number of channels in each layer by this amount
@@ -197,13 +207,13 @@ struct MobileNetV2 : torch::nn::Module
                                  features_output_channels,
                                  /*kernel_size=*/1));
 
-        register_module("features", features);
+        register_module(featuresModuleName, features);
 
         // classifier: Dropout + Linear
         classifier = torch::nn::Sequential();
         classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(dropout)));
         classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(features_output_channels, num_classes)));
-        register_module("classifier", classifier);
+        register_module(classifierModuleName, classifier);
     }
 
     /**
