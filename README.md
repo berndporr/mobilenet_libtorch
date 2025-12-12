@@ -30,7 +30,7 @@ make
 ```
 to compile the library and the demos.
 
-## Constructive example
+## Constructive classification example
 
 Get the pretrained weights by running this python script:
 ```
@@ -54,6 +54,10 @@ The output should look like this:
 ```
 Predicted class 18: magpie
 ```
+
+See also the subfolder `transfer` for transfer learning replacing
+the standard classifier with a custom one and using the pre-trained weights
+for the feature detector.
 
 ## Installation
 
