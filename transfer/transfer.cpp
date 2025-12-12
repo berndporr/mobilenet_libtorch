@@ -143,7 +143,7 @@ int main()
         }
 	const double avgLoss = cumloss / (double)n;
         progress(epoch, epochs, avgLoss);
-	floss << avgLoss << std::endl;
+	floss << epoch << "\t" << avgLoss << std::endl;
         std::cout << std::endl;
     }
     std::cout << "Done.\n";

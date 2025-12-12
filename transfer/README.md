@@ -9,6 +9,7 @@ Learns to distinguish between cats and dogs.
 ## Load the dataset from Kaggle
 
 ```
+pip install kagglehub
 python get_cats_dogs.py
 ```
 
