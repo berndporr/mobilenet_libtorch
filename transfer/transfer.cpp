@@ -102,7 +102,7 @@ int main()
     model.classifier = torch::nn::Sequential(
         torch::nn::Dropout(0.2),
         torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
-    model.register_module("custom", model.classifier);
+    model.replace_module("classifier", model.classifier);
 
     // Freeze the feature detectors
     for (auto &p : model.features->parameters())
