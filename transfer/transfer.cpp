@@ -102,7 +102,7 @@ int main()
     model.classifier = torch::nn::Sequential(
         torch::nn::Dropout(0.2),
         torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
-    model.to(device);
+    model.register_module("custom", model.classifier);
 
     // Freeze the feature detectors
     for (auto &p : model.features->parameters())
@@ -111,6 +111,8 @@ int main()
     // Optimizer only for classifier
     torch::optim::Adam optimizer(model.classifier->parameters(), torch::optim::AdamOptions(1e-3));
     torch::nn::CrossEntropyLoss criterion;
+
+    model.to(device);
 
     // -------------------------
     // Training loop
