@@ -11,6 +11,9 @@
 
 namespace fs = std::filesystem;
 
+// location of the Kaggle dataset
+const std::string root = ".cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
+
 // -------------------------
 // Dataset implementation
 // -------------------------
@@ -28,7 +31,7 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
     {
         for (size_t label = 0; label < classes.size(); label++)
         {
-            fs::path class_path = fs::path(root) / classes[label];
+            fs::path class_path = fs::path(root) / fs::path(classes[label]);
             for (auto &p : fs::directory_iterator(class_path))
             {
                 if (p.is_regular_file())
@@ -59,9 +62,6 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
     }
 };
 
-// location of the Kaggle dataset
-const std::string root = "/.cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
-
 void progress(int epoch, int epochs, double loss)
 {
     std::cout << "Epoch [" << epoch << "/" << epochs << "], Loss: "
@@ -82,10 +82,10 @@ int main()
     }
 
     std::vector<std::string> classes = {"Cat", "Dog"};
-    std::string homedir(getpwuid(getuid())->pw_dir);
-    ImageFolderDataset ds(homedir + root, classes);
+    fs::path homedir(getpwuid(getuid())->pw_dir);
+    ImageFolderDataset ds(homedir / root, classes);
 
-    const size_t batch_size = 32;
+    const int batch_size = 32;
 
     auto loader = torch::data::make_data_loader(
         ds.map(torch::data::transforms::Stack<>()),
@@ -117,12 +117,12 @@ int main()
     // -------------------------
     // Training loop
     // -------------------------
-    const size_t epochs = 50;
+    const int epochs = 50;
 
     std::fstream floss;
     floss.open("loss.dat",std::fstream::out);
 
-    for (size_t epoch = 1; epoch <= epochs; epoch++)
+    for (int epoch = 1; epoch <= epochs; epoch++)
     {
         float cumloss = 0;
         int n = 0;

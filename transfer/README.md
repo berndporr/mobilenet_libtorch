@@ -6,6 +6,10 @@ keeping the features frozen.
 
 Learns to distinguish between cats and dogs.
 
+![alt tag](cat.jpg)
+![alt tag](dog.jpg)
+
+
 ## Load the dataset from Kaggle
 
 ```
