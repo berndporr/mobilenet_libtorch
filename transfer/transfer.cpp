@@ -20,6 +20,9 @@ const std::vector<fs::path> classes = {"Cat", "Dog"};
 // The batch size for training
 const int batch_size = 32;
 
+// The number of epochs
+const int epochs = 50;
+
 // -------------------------
 // Dataset implementation
 // -------------------------
@@ -68,6 +71,7 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
     }
 };
 
+// Simple progress output on the same line. No new line.
 void progress(int epoch, int epochs, double loss)
 {
     std::cout << "Epoch [" << epoch << "/" << epochs << "], Loss: "
@@ -91,42 +95,40 @@ int main()
     ImageFolderDataset ds(homedir / datasetpath, classes);
 
     // Creates a DataLoader instance for a stateless dataset.
-    // The sampler is RandomSampler = shuffling is enabled.
+    // The sampler is RandomSampler so shuffling is enabled.
     auto loader = torch::data::make_data_loader(
         ds.map(torch::data::transforms::Stack<>()),
         torch::data::DataLoaderOptions().batch_size(batch_size));
 
-    // -------------------------
     // Model setup
-    // -------------------------
     MobileNetV2 model;
+
+    // Load the pre-trained weights.
     model.load_weights("../mobilenet_v2.pt");
 
-    // Replace the standard classifier by a custom one with
-    // only two categories for cats and dogs
+    // Replace the standard classifier by this custom one with
+    // only two categories for cats and dogs.
     model.classifier = torch::nn::Sequential(
         torch::nn::Dropout(0.2),
         torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
     model.replace_module(MobileNetV2::classifierModuleName, model.classifier);
 
-    // Freeze the feature detectors
+    // Freeze the feature detectors.
     for (auto &p : model.features->parameters())
         p.requires_grad_(false);
 
-    // Optimizer only for classifier
+    // Optimizer only for classifier.
     torch::optim::Adam optimizer(model.classifier->parameters(), torch::optim::AdamOptions(1e-3));
     torch::nn::CrossEntropyLoss criterion;
 
+    // Send the model to the CPU or GPU
     model.to(device);
 
-    // -------------------------
-    // Training loop
-    // -------------------------
-    const int epochs = 50;
-
+    // Logging of the loss
     std::fstream floss;
-    floss.open("loss.dat",std::fstream::out);
+    floss.open("loss.dat", std::fstream::out);
 
+    // Training loop
     for (int epoch = 1; epoch <= epochs; epoch++)
     {
         float cumloss = 0;
@@ -146,10 +148,11 @@ int main()
             cumloss += loss.item<double>();
             n++;
         }
-	const double avgLoss = cumloss / (double)n;
+        const double avgLoss = cumloss / (double)n;
         progress(epoch, epochs, avgLoss);
-	floss << epoch << "\t" << avgLoss << std::endl;
-        std::cout << std::endl << std::flush;
+        floss << epoch << "\t" << avgLoss << std::endl;
+        std::cout << std::endl
+                  << std::flush;
     }
     std::cout << "Done.\n";
     return 0;
