@@ -11,8 +11,14 @@
 
 namespace fs = std::filesystem;
 
-// location of the Kaggle dataset
-const std::string root = ".cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
+// Path of the Kaggle dataset
+const fs::path datasetpath = ".cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
+
+// Subdirs of the two classes
+const std::vector<fs::path> classes = {"Cat", "Dog"};
+
+// The batch size for training
+const int batch_size = 32;
 
 // -------------------------
 // Dataset implementation
@@ -21,35 +27,35 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
 {
     struct Sample
     {
-        std::string image_path;
+        fs::path image_path;
         int label;
     };
 
     std::vector<Sample> samples;
 
-    ImageFolderDataset(const std::string &root, const std::vector<std::string> &classes)
+    ImageFolderDataset(const fs::path &root, const std::vector<fs::path> &classes)
     {
         for (size_t label = 0; label < classes.size(); label++)
         {
-            fs::path class_path = fs::path(root) / fs::path(classes[label]);
+            fs::path class_path = root / classes[label];
             for (auto &p : fs::directory_iterator(class_path))
             {
                 if (p.is_regular_file())
                 {
-                    samples.push_back({p.path().string(), (int)label});
+                    samples.push_back({p.path(), (int)label});
                 }
             }
         }
-        std::cout << "Loaded " << samples.size() << " samples from " << root << "\n";
+        std::cout << "Loaded " << samples.size() << " samples from " << datasetpath.string() << "\n";
     }
 
     torch::data::Example<> get(size_t idx) override
     {
         const auto &sample = samples[idx];
-        cv::Mat img = cv::imread(sample.image_path);
+        cv::Mat img = cv::imread(sample.image_path.string());
         if (img.empty())
         {
-            throw std::runtime_error("Failed to load image: " + sample.image_path);
+            throw std::runtime_error("Failed to load image: " + sample.image_path.string());
         }
         torch::Tensor data = MobileNetV2::preprocess(img);
         torch::Tensor label = torch::tensor(sample.label, torch::kLong);
@@ -81,11 +87,8 @@ int main()
         device = torch::Device(device_type);
     }
 
-    const std::vector<std::string> classes = {"Cat", "Dog"};
     const fs::path homedir(getpwuid(getuid())->pw_dir);
-    ImageFolderDataset ds(homedir / root, classes);
-
-    const int batch_size = 32;
+    ImageFolderDataset ds(homedir / datasetpath, classes);
 
     // Creates a DataLoader instance for a stateless dataset.
     // The sampler is RandomSampler = shuffling is enabled.
