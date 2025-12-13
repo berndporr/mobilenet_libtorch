@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     // create an instance of MobilenetV2
     MobileNetV2 model;
     // load the pre-trained weights
-    model.load_weights(pretrained_weights_file);
+    model.load_torchvision_weights(pretrained_weights_file);
     // upload it all to the device (CPU or GPU)
     model.to(device);
     // switch to pure inference so no training

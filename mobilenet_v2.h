@@ -163,7 +163,7 @@ public:
      *
      * @param pt filename of the .pt weight file.
      */
-    void load_weights(std::string pt)
+    void load_torchvision_weights(std::string pt)
     {
         std::ifstream input(pt, std::ios::binary);
         input.exceptions(input.failbit);
