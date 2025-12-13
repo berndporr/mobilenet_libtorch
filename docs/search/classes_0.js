@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['conv2dnormactivation_0',['Conv2dNormActivation',['../classConv2dNormActivation.html',1,'']]]
+  ['mobilenetv2_0',['MobileNetV2',['../classMobileNetV2.html',1,'']]]
 ];

@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('classMobileNetV2.html',''); initResiza
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -127,10 +128,10 @@ Collaboration diagram for MobileNetV2:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a160e21f81382ed20b6630706bdb1945c" id="r_a160e21f81382ed20b6630706bdb1945c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a160e21f81382ed20b6630706bdb1945c">MobileNetV2</a> (int num_classes=1000, float width_mult=1.0f, int round_nearest=8, float dropout=0.2)</td></tr>
-<tr class="memdesc:a160e21f81382ed20b6630706bdb1945c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object If you want to load the weights from torchvision into the classifier use the default values for the parameters.  <br /></td></tr>
+<tr class="memdesc:a160e21f81382ed20b6630706bdb1945c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object.  <br /></td></tr>
 <tr class="separator:a160e21f81382ed20b6630706bdb1945c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38e5697a203d231b82a52f6cb68b026e" id="r_a38e5697a203d231b82a52f6cb68b026e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a38e5697a203d231b82a52f6cb68b026e">getNinputChannels4Classifier</a> () const</td></tr>
-<tr class="memdesc:a38e5697a203d231b82a52f6cb68b026e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of input channels for the classfier This will make it easy to replace the classifier with anything the user wants by creating their own torch::nn::Sequential() for the classifier.  <br /></td></tr>
+<tr class="memdesc:a38e5697a203d231b82a52f6cb68b026e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of input channels for the classfier.  <br /></td></tr>
 <tr class="separator:a38e5697a203d231b82a52f6cb68b026e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02be1eecd34d927cf49ba1e90ead59e3" id="r_a02be1eecd34d927cf49ba1e90ead59e3"><td class="memItemLeft" align="right" valign="top">torch::Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a02be1eecd34d927cf49ba1e90ead59e3">forward</a> (torch::Tensor x)</td></tr>
 <tr class="memdesc:a02be1eecd34d927cf49ba1e90ead59e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the forward pass.  <br /></td></tr>
@@ -140,24 +141,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize_weights</b
 <tr class="memdesc:a5bbe3c9b0bd4bc1c572fbafcfccd69f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize conv/bn/linear similar to torchvision defaults. <br /></td></tr>
 <tr class="separator:a5bbe3c9b0bd4bc1c572fbafcfccd69f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cdc7d76796f9b8283f2e9a0c0f88f52" id="r_a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a4cdc7d76796f9b8283f2e9a0c0f88f52">load_weights</a> (std::string pt)</td></tr>
-<tr class="memdesc:a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a .pt weight file containing a dic with key/parameter pairs See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a>.  <br /></td></tr>
+<tr class="memdesc:a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a .pt weight file containing a dict with key/parameter pairs.  <br /></td></tr>
 <tr class="separator:a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a95c50ff709f6eaca7069b6065f04d7e7" id="r_a95c50ff709f6eaca7069b6065f04d7e7"><td class="memItemLeft" align="right" valign="top">static torch::Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a95c50ff709f6eaca7069b6065f04d7e7">preprocess</a> (cv::Mat img, bool resizeOnly=false)</td></tr>
-<tr class="memdesc:a95c50ff709f6eaca7069b6065f04d7e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preprocessing of an openCV image for inference or learning The images are resized to 256x256, followed by a central crop of 224x224.  <br /></td></tr>
+<tr class="memdesc:a95c50ff709f6eaca7069b6065f04d7e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preprocessing of an openCV image for inference or learning.  <br /></td></tr>
 <tr class="separator:a95c50ff709f6eaca7069b6065f04d7e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:acc061c28d92d82f63a8536decf664339" id="r_acc061c28d92d82f63a8536decf664339"><td class="memItemLeft" align="right" valign="top"><a id="acc061c28d92d82f63a8536decf664339" name="acc061c28d92d82f63a8536decf664339"></a>
-torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><b>classifier</b> {nullptr}</td></tr>
-<tr class="memdesc:acc061c28d92d82f63a8536decf664339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Classifier submodule This can be replaced by a custom classifier for transfer learning. <br /></td></tr>
+<tr class="memitem:acc061c28d92d82f63a8536decf664339" id="r_acc061c28d92d82f63a8536decf664339"><td class="memItemLeft" align="right" valign="top">torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#acc061c28d92d82f63a8536decf664339">classifier</a></td></tr>
+<tr class="memdesc:acc061c28d92d82f63a8536decf664339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Classifier submodule.  <br /></td></tr>
 <tr class="separator:acc061c28d92d82f63a8536decf664339"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e4d61d129accd1d361bb1820f07a30e" id="r_a8e4d61d129accd1d361bb1820f07a30e"><td class="memItemLeft" align="right" valign="top"><a id="a8e4d61d129accd1d361bb1820f07a30e" name="a8e4d61d129accd1d361bb1820f07a30e"></a>
-torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><b>features</b> {nullptr}</td></tr>
-<tr class="memdesc:a8e4d61d129accd1d361bb1820f07a30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Features submodule This needs to be accessible for transfer learning which then will disable learning here. <br /></td></tr>
+<tr class="memitem:a8e4d61d129accd1d361bb1820f07a30e" id="r_a8e4d61d129accd1d361bb1820f07a30e"><td class="memItemLeft" align="right" valign="top">torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a8e4d61d129accd1d361bb1820f07a30e">features</a></td></tr>
+<tr class="memdesc:a8e4d61d129accd1d361bb1820f07a30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Features submodule.  <br /></td></tr>
 <tr class="separator:a8e4d61d129accd1d361bb1820f07a30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
@@ -218,13 +217,14 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 </table>
 </div><div class="memdoc">
 
-<p>Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object If you want to load the weights from torchvision into the classifier use the default values for the parameters. </p>
+<p>Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object. </p>
+<p>If you want to load the weights from torchvision into the classifier use the default values for the parameters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">num_classes</td><td>Number of classes </td></tr>
-    <tr><td class="paramname">width_mult</td><td>Width multiplier - adjusts number of channels in each layer by this amount </td></tr>
-    <tr><td class="paramname">round_nearest</td><td>Round the number of channels in each layer to be a multiple of this number </td></tr>
-    <tr><td class="paramname">dropout</td><td>Dropout probability for the dropout layer in the classifier </td></tr>
+    <tr><td class="paramname">num_classes</td><td>Number of classes. </td></tr>
+    <tr><td class="paramname">width_mult</td><td>Width multiplier - adjusts number of channels in each layer by this amount. </td></tr>
+    <tr><td class="paramname">round_nearest</td><td>Round the number of channels in each layer to be a multiple of this number. </td></tr>
+    <tr><td class="paramname">dropout</td><td>Dropout probability for the dropout layer in the classifier. </td></tr>
   </table>
   </dd>
 </dl>
@@ -290,7 +290,8 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 </table>
 </div><div class="memdoc">
 
-<p>Gets the number of input channels for the classfier This will make it easy to replace the classifier with anything the user wants by creating their own torch::nn::Sequential() for the classifier. </p>
+<p>Gets the number of input channels for the classfier. </p>
+<p>This will make it easy to replace the classifier with anything the user wants by creating their own torch::nn::Sequential() for the classifier.</p>
 <dl class="section return"><dt>Returns</dt><dd>int The number of intput channels to the classifer class "classfier". </dd></dl>
 
 </div>
@@ -319,10 +320,11 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 </table>
 </div><div class="memdoc">
 
-<p>Loads a .pt weight file containing a dic with key/parameter pairs See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a>. </p>
+<p>Loads a .pt weight file containing a dict with key/parameter pairs. </p>
+<p>See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pt</td><td>filename of the .pt weight file </td></tr>
+    <tr><td class="paramname">pt</td><td>filename of the .pt weight file. </td></tr>
   </table>
   </dd>
 </dl>
@@ -363,11 +365,11 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 </table>
 </div><div class="memdoc">
 
-<p>Preprocessing of an openCV image for inference or learning The images are resized to 256x256, followed by a central crop of 224x224. </p>
-<p>Finally the values are first rescaled to [0.0, 1.0] and then normalized using mean=[0.485, 0.456, 0.406] and std=[0.229, 0.224, 0.225].</p>
+<p>Preprocessing of an openCV image for inference or learning. </p>
+<p>The images are resized to 256x256, followed by a central crop of 224x224. Finally the values are first rescaled to [0.0, 1.0] and then normalized using mean=[0.485, 0.456, 0.406] and std=[0.229, 0.224, 0.225].</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">img</td><td>8bit BGR openCV image with an aspect ratio of 1:1 </td></tr>
+    <tr><td class="paramname">img</td><td>8bit BGR openCV image with an aspect ratio of 1:1. </td></tr>
     <tr><td class="paramname">resizeOnly</td><td>If true the image is only resized to 224x224 but not cropped. Default: false. </td></tr>
   </table>
   </dd>
@@ -377,6 +379,23 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="acc061c28d92d82f63a8536decf664339" name="acc061c28d92d82f63a8536decf664339"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc061c28d92d82f63a8536decf664339">&#9670;&#160;</a></span>classifier</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::nn::Sequential MobileNetV2::classifier</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Classifier submodule. </p>
+<p>This can be replaced by a custom classifier for transfer learning. </p>
+
+</div>
+</div>
 <a id="aa45510b7d6c4b61143ef93e01daafed9" name="aa45510b7d6c4b61143ef93e01daafed9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa45510b7d6c4b61143ef93e01daafed9">&#9670;&#160;</a></span>classifierModuleName</h2>
 
@@ -399,6 +418,23 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 
 <p>Name of the classifier module. </p>
 <p>The name of the classifier module is needed whne replacing the default classifier. </p>
+
+</div>
+</div>
+<a id="a8e4d61d129accd1d361bb1820f07a30e" name="a8e4d61d129accd1d361bb1820f07a30e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e4d61d129accd1d361bb1820f07a30e">&#9670;&#160;</a></span>features</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::nn::Sequential MobileNetV2::features</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Features submodule. </p>
+<p>This needs to be accessible for transfer learning which then will disable learning here. </p>
 
 </div>
 </div>

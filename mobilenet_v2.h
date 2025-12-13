@@ -12,9 +12,9 @@
 #include <opencv2/opencv.hpp>
 
 /***
- * MobileNetV2 C++ Implementation (LibTorch)
- * Which is able to load the pre-trained weights from torchvision
- * (c) 2025 Bernd Porr, GPLv3
+ * MobileNetV2 C++ Implementation (LibTorch).
+ * It's able to load pre-trained weights from torchvision.
+ * (c) 2025 Bernd Porr, GPLv3.
  ***/
 
 #ifdef NDEBUG
@@ -22,115 +22,6 @@ constexpr bool debugOutput = false;
 #else
 constexpr bool debugOutput = true;
 #endif
-
-/**
- * @brief Module which performs Convolution, Batch Norm and Relu6.
- * See https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
- */
-class Conv2dNormActivation : public torch::nn::Module
-{
-public:
-    static constexpr char className[] = "Conv2dNormActivation";
-
-    static inline torch::Tensor relu6(const torch::Tensor &x)
-    {
-        return torch::clamp(torch::relu(x), 0, 6);
-    }
-
-    Conv2dNormActivation(int in_channels,
-                         int out_channels,
-                         int kernel_size = 3,
-                         int stride = 1,
-                         int padding = -1,
-                         int groups = 1)
-    {
-        const int dilation = 1;
-        conv = torch::nn::Sequential();
-        if (padding < 0)
-        {
-            padding = (kernel_size - 1) / 2 * dilation;
-        }
-        conv->push_back(torch::nn::Conv2d(
-            torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)
-                .stride(stride)
-                .padding(padding)
-                .groups(groups)
-                .bias(false)));
-        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));
-        conv->push_back(torch::nn::Functional(relu6));
-        register_module(className, conv);
-    }
-
-    torch::Tensor forward(const torch::Tensor &x)
-    {
-        return conv->forward(x);
-    }
-
-private:
-    torch::nn::Sequential conv{nullptr};
-};
-
-/**
- * @brief Inverted residual
- * Converted from https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L19
- */
-class InvertedResidual : public torch::nn::Module
-{
-public:
-    static constexpr char className[] = "InvertedResidual";
-
-    InvertedResidual(int inp, int oup, int stride, int expand_ratio)
-    {
-        if ((stride < 1) || (stride > 2))
-        {
-            throw std::invalid_argument("Stride needs to be 1 or 2.");
-        }
-        const int hidden_dim = (int)round(inp * expand_ratio);
-        use_res_connect = (stride == 1) && (inp == oup);
-
-        conv = torch::nn::Sequential();
-
-        if (expand_ratio != 1)
-        {
-            conv->push_back(
-                Conv2dNormActivation(inp,
-                                     hidden_dim,
-                                     /*kernel_size*/ 1));
-        }
-
-        conv->push_back(
-            Conv2dNormActivation(hidden_dim,
-                                 hidden_dim,
-                                 /*kernel_size=*/3,
-                                 /*stride=*/stride,
-                                 /*padding=*/-1,
-                                 /*groups=*/hidden_dim));
-
-        conv->push_back(torch::nn::Conv2d(
-            torch::nn::Conv2dOptions(hidden_dim, oup,
-                                     /*kernel_size=*/1)
-                .stride(1)
-                .padding(0)
-                .bias(false)));
-        conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));
-
-        register_module(className, conv);
-    }
-
-    torch::Tensor forward(const torch::Tensor &x)
-    {
-        if (use_res_connect)
-        {
-            return x + conv->forward(x);
-        }
-        else
-        {
-            return conv->forward(x);
-        }
-    }
-    torch::nn::Sequential conv{nullptr};
-    bool use_res_connect;
-};
 
 /**
  * @brief Implementation of MobileNetV2 as done in py-torchvision
@@ -150,14 +41,14 @@ public:
     static constexpr char classifierModuleName[] = "classifier";
 
     /**
-     * @brief Construct a new MobileNetV2 object
+     * @brief Construct a new MobileNetV2 object.
      * If you want to load the weights from torchvision into the classifier use the
      * default values for the parameters.
      *
-     * @param num_classes Number of classes
-     * @param width_mult Width multiplier - adjusts number of channels in each layer by this amount
-     * @param round_nearest Round the number of channels in each layer to be a multiple of this number
-     * @param dropout Dropout probability for the dropout layer in the classifier
+     * @param num_classes Number of classes.
+     * @param width_mult Width multiplier - adjusts number of channels in each layer by this amount.
+     * @param round_nearest Round the number of channels in each layer to be a multiple of this number.
+     * @param dropout Dropout probability for the dropout layer in the classifier.
      */
     MobileNetV2(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8, float dropout = 0.2)
     {
@@ -206,7 +97,7 @@ public:
     }
 
     /**
-     * @brief Gets the number of input channels for the classfier
+     * @brief Gets the number of input channels for the classfier.
      * This will make it easy to replace the classifier with anything the user wants
      * by creating their own torch::nn::Sequential() for the classifier.
      *
@@ -218,7 +109,7 @@ public:
     }
 
     /**
-     * @brief Performs the forward pass
+     * @brief Performs the forward pass.
      *
      * @param x The batch of input images.
      * @return torch::Tensor The category scores for the different labels.
@@ -234,7 +125,7 @@ public:
     }
 
     /**
-     * @brief Initialize conv/bn/linear similar to torchvision defaults
+     * @brief Initialize conv/bn/linear similar to torchvision defaults.
      */
     void initialize_weights()
     {
@@ -260,10 +151,10 @@ public:
     }
 
     /**
-     * @brief Loads a .pt weight file containing a dic with key/parameter pairs
+     * @brief Loads a .pt weight file containing a dict with key/parameter pairs.
      * See https://github.com/pytorch/pytorch/issues/36577
      *
-     * @param pt filename of the .pt weight file
+     * @param pt filename of the .pt weight file.
      */
     void load_weights(std::string pt)
     {
@@ -344,12 +235,12 @@ public:
     }
 
     /**
-     * @brief Preprocessing of an openCV image for inference or learning
+     * @brief Preprocessing of an openCV image for inference or learning.
      * The images are resized to 256x256, followed by a central crop of 224x224.
      * Finally the values are first rescaled to [0.0, 1.0]
      * and then normalized using mean=[0.485, 0.456, 0.406] and std=[0.229, 0.224, 0.225].
      *
-     * @param img 8bit BGR openCV image with an aspect ratio of 1:1
+     * @param img 8bit BGR openCV image with an aspect ratio of 1:1.
      * @param resizeOnly If true the image is only resized to 224x224 but not cropped. Default: false.
      * @return torch::Tensor The image as a tensor ready to be used for inference and learning.
      */
@@ -384,20 +275,19 @@ public:
     }
 
     /**
-     * @brief Classifier submodule
+     * @brief Classifier submodule.
      * This can be replaced by a custom classifier for transfer learning.
      */
-    torch::nn::Sequential classifier{nullptr}; // Dropout + Linear
+    torch::nn::Sequential classifier;
 
     /**
-     * @brief Features submodule
+     * @brief Features submodule.
      * This needs to be accessible for transfer learning which then will disable learning here.
      */
-    torch::nn::Sequential features{nullptr};
+    torch::nn::Sequential features;
 
-    private:
-
-    // helper which maps the libtorch keys to pytorch keys
+private:
+    // Helper which maps the libtorch keys to pytorch keys.
     std::string ourkey2torchvision(std::string k) const
     {
         // called simply "conv" in the weights file
@@ -408,7 +298,7 @@ public:
         return k;
     }
 
-    // makes a value divisible
+    // Makes a value divisible.
     inline int make_divisible(int v, int divisor = 8, int min_value = -1) const
     {
         if (min_value < 0)
@@ -419,7 +309,7 @@ public:
         return new_v;
     }
 
-    // features output channels but can be scaled
+    // Features output channels but can be scaled.
     int features_output_channels = 1280;
 
     // MobileNetV2 inverted residual settings:
@@ -432,5 +322,114 @@ public:
         {6, 96, 3, 1},
         {6, 160, 3, 2},
         {6, 320, 1, 1},
+    };
+
+    /**
+     * @brief Module which performs Convolution, Batch Norm and Relu6.
+     * See https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
+     */
+    class Conv2dNormActivation : public torch::nn::Module
+    {
+    public:
+        static constexpr char className[] = "Conv2dNormActivation";
+
+        static inline torch::Tensor relu6(const torch::Tensor &x)
+        {
+            return torch::clamp(torch::relu(x), 0, 6);
+        }
+
+        Conv2dNormActivation(int in_channels,
+                             int out_channels,
+                             int kernel_size = 3,
+                             int stride = 1,
+                             int padding = -1,
+                             int groups = 1)
+        {
+            const int dilation = 1;
+            conv = torch::nn::Sequential();
+            if (padding < 0)
+            {
+                padding = (kernel_size - 1) / 2 * dilation;
+            }
+            conv->push_back(torch::nn::Conv2d(
+                torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)
+                    .stride(stride)
+                    .padding(padding)
+                    .groups(groups)
+                    .bias(false)));
+            conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));
+            conv->push_back(torch::nn::Functional(relu6));
+            register_module(className, conv);
+        }
+
+        torch::Tensor forward(const torch::Tensor &x)
+        {
+            return conv->forward(x);
+        }
+
+    private:
+        torch::nn::Sequential conv{nullptr};
+    };
+
+    /**
+     * @brief Inverted residual
+     * Converted from https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L19
+     */
+    class InvertedResidual : public torch::nn::Module
+    {
+    public:
+        static constexpr char className[] = "InvertedResidual";
+
+        InvertedResidual(int inp, int oup, int stride, int expand_ratio)
+        {
+            if ((stride < 1) || (stride > 2))
+            {
+                throw std::invalid_argument("Stride needs to be 1 or 2.");
+            }
+            const int hidden_dim = (int)round(inp * expand_ratio);
+            use_res_connect = (stride == 1) && (inp == oup);
+
+            conv = torch::nn::Sequential();
+
+            if (expand_ratio != 1)
+            {
+                conv->push_back(
+                    Conv2dNormActivation(inp,
+                                         hidden_dim,
+                                         /*kernel_size*/ 1));
+            }
+
+            conv->push_back(
+                Conv2dNormActivation(hidden_dim,
+                                     hidden_dim,
+                                     /*kernel_size=*/3,
+                                     /*stride=*/stride,
+                                     /*padding=*/-1,
+                                     /*groups=*/hidden_dim));
+
+            conv->push_back(torch::nn::Conv2d(
+                torch::nn::Conv2dOptions(hidden_dim, oup,
+                                         /*kernel_size=*/1)
+                    .stride(1)
+                    .padding(0)
+                    .bias(false)));
+            conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));
+
+            register_module(className, conv);
+        }
+
+        torch::Tensor forward(const torch::Tensor &x)
+        {
+            if (use_res_connect)
+            {
+                return x + conv->forward(x);
+            }
+            else
+            {
+                return conv->forward(x);
+            }
+        }
+        torch::nn::Sequential conv{nullptr};
+        bool use_res_connect;
     };
 };
