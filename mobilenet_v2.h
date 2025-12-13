@@ -13,7 +13,8 @@
 
 /***
  * MobileNetV2 C++ Implementation (LibTorch).
- * It's able to load pre-trained weights from torchvision.
+ * It's able to load pre-trained weights from torchvision
+ * and has the neccessary methods to enable transfer learning.
  * (c) 2025 Bernd Porr, GPLv3.
  ***/
 
@@ -280,6 +281,7 @@ public:
 
     /**
      * @brief Replaces classifer with a new one.
+     *
      * This is done for transfer learning where the classifier is replaced with a new one.
      * @param newClassifier The new classifier.
      */
@@ -301,7 +303,7 @@ public:
     }
 
     /**
-     * @brief Gets the Classifier object
+     * @brief Gets the Classifier object.
      * Gets a pointer to the classifier, for example to attach an optimiser with it
      * for transfer learning.
      * 
