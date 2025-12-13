@@ -30,7 +30,9 @@ make
 ```
 to compile the library and the demos.
 
-## Constructive classification example
+## Classification demo
+
+This demo classifies a single image.
 
 Get the pretrained weights by running this python script:
 ```
@@ -40,8 +42,7 @@ It downloads the weight file `mobilenet_v2-7ebf99e0.pth` from torchvision
 and converts its content into the state dict `mobilenet_v2.pt` 
 which can then be loaded into the classifier via `load_weights`.
 
-Run this demo which classifies a single image, for example this one:
-
+Then run the classifier on any image file, for example this:
 ```
 ./demo_mobilenet bird.jpg
 ```
@@ -49,15 +50,17 @@ Run this demo which classifies a single image, for example this one:
 ![alt tag](bird.jpg)
 [Phot credit: By Pierre-Selim - Flickr: Pica pica, CC BY-SA 2.0](https://commons.wikimedia.org/w/index.php?curid=19400996)
 
-The output should look like this:
+The output should be:
 
 ```
 Predicted class 18: magpie
 ```
 
-See also the subfolder `transfer` for transfer learning replacing
-the standard classifier with a custom one and using the pre-trained weights
-for the feature detector.
+## Transfer learning
+
+See he subfolder [transfer_learning](transfer_learning)` which
+demonstrates how to learn a new image classification task by
+just replacing and re-training the final classification layer.
 
 ## Installation
 
