@@ -62,6 +62,10 @@ See he subfolder [transfer_learning](transfer_learning)` which
 demonstrates how to learn a new image classification task by
 just replacing and re-training the final classification layer.
 
+## Class documentation
+
+[The doxygen generated docs are here.](https://berndporr.github.io/mobilenet_libtorch/)
+
 ## Installation
 
 All functionality is included in the single header file `mobilenet_v2.h`. To install it
