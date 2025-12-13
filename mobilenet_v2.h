@@ -30,16 +30,6 @@ constexpr bool debugOutput = true;
 class MobileNetV2 : public torch::nn::Module
 {
 public:
-    // Module name of the feature detector.
-    static constexpr char featuresModuleName[] = "features";
-
-    /**
-     * @brief Name of the classifier module.
-     * The name of the classifier module is needed whne replacing
-     * the default classifier.
-     */
-    static constexpr char classifierModuleName[] = "classifier";
-
     /**
      * @brief Construct a new MobileNetV2 object.
      * If you want to load the weights from torchvision into the classifier use the
@@ -95,6 +85,20 @@ public:
         classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(features_output_channels, num_classes)));
         register_module(classifierModuleName, classifier);
     }
+
+    /**
+     * @brief Name of the features submodule.
+     * This is used for module registration and appears as part of the key in named_parametes.
+     */
+    static constexpr char featuresModuleName[] = "features";
+
+    /**
+     * @brief Name of the classifier submodule.
+     * This is used for module registration and appears as part of the key in named_parametes.
+     * The name of the classifier module is needed when replacing
+     * the default classifier.
+     */
+    static constexpr char classifierModuleName[] = "classifier";
 
     /**
      * @brief Gets the number of input channels for the classfier.

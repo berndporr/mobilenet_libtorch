@@ -161,11 +161,11 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aee21839d87b6850ef8da4834ae0ffdb2" id="r_aee21839d87b6850ef8da4834ae0ffdb2"><td class="memItemLeft" align="right" valign="top"><a id="aee21839d87b6850ef8da4834ae0ffdb2" name="aee21839d87b6850ef8da4834ae0ffdb2"></a>
-static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>featuresModuleName</b> [] = &quot;features&quot;</td></tr>
+<tr class="memitem:aee21839d87b6850ef8da4834ae0ffdb2" id="r_aee21839d87b6850ef8da4834ae0ffdb2"><td class="memItemLeft" align="right" valign="top">static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#aee21839d87b6850ef8da4834ae0ffdb2">featuresModuleName</a> [] = &quot;features&quot;</td></tr>
+<tr class="memdesc:aee21839d87b6850ef8da4834ae0ffdb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the features submodule.  <br /></td></tr>
 <tr class="separator:aee21839d87b6850ef8da4834ae0ffdb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa45510b7d6c4b61143ef93e01daafed9" id="r_aa45510b7d6c4b61143ef93e01daafed9"><td class="memItemLeft" align="right" valign="top">static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#aa45510b7d6c4b61143ef93e01daafed9">classifierModuleName</a> [] = &quot;classifier&quot;</td></tr>
-<tr class="memdesc:aa45510b7d6c4b61143ef93e01daafed9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the classifier module.  <br /></td></tr>
+<tr class="memdesc:aa45510b7d6c4b61143ef93e01daafed9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the classifier submodule.  <br /></td></tr>
 <tr class="separator:aa45510b7d6c4b61143ef93e01daafed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -416,8 +416,8 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 </table>
 </div><div class="memdoc">
 
-<p>Name of the classifier module. </p>
-<p>The name of the classifier module is needed whne replacing the default classifier. </p>
+<p>Name of the classifier submodule. </p>
+<p>This is used for module registration and appears as part of the key in named_parametes. The name of the classifier module is needed when replacing the default classifier. </p>
 
 </div>
 </div>
@@ -435,6 +435,31 @@ static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><b>feat
 
 <p>Features submodule. </p>
 <p>This needs to be accessible for transfer learning which then will disable learning here. </p>
+
+</div>
+</div>
+<a id="aee21839d87b6850ef8da4834ae0ffdb2" name="aee21839d87b6850ef8da4834ae0ffdb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee21839d87b6850ef8da4834ae0ffdb2">&#9670;&#160;</a></span>featuresModuleName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr char MobileNetV2::featuresModuleName[] = &quot;features&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Name of the features submodule. </p>
+<p>This is used for module registration and appears as part of the key in named_parametes. </p>
 
 </div>
 </div>

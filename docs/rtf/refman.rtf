@@ -309,15 +309,17 @@ Static Public Attributes\par
 
 {
 \pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-
-static constexpr char {\b featuresModuleName} [] = "features"{\bkmkstart AAAAAAAAAD}
-{\bkmkend AAAAAAAAAD}
-\par
+static constexpr char {\b featuresModuleName} [] = "features"\par
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Name of the features submodule. }{
+}\par
+}\par}
 \pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
 static constexpr char {\b classifierModuleName} [] = "classifier"\par
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Name of the classifier module. }{
+Name of the classifier submodule. }{
 }\par
 }\par}
 }
@@ -339,8 +341,8 @@ Constructor & Destructor Documentation\par
 {\b 
 MobileNetV2::MobileNetV2 (int  {\i num_classes} = {\f2 1000}, float  {\i width_mult} = {\f2 1.0f}, int  {\i round_nearest} = {\f2 8}, float  {\i dropout} = {\f2 0.2}){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAE}
-{\bkmkend AAAAAAAAAE}
+{\bkmkstart AAAAAAAAAD}
+{\bkmkend AAAAAAAAAD}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -387,8 +389,8 @@ Member Function Documentation\par
 {\b 
 torch::Tensor MobileNetV2::forward (torch::Tensor  {\i x}){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAF}
-{\bkmkend AAAAAAAAAF}
+{\bkmkstart AAAAAAAAAE}
+{\bkmkend AAAAAAAAAE}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -416,8 +418,8 @@ torch::Tensor The category scores for the different labels. \par
 {\b 
 int MobileNetV2::getNinputChannels4Classifier () const{\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAG}
-{\bkmkend AAAAAAAAAG}
+{\bkmkstart AAAAAAAAAF}
+{\bkmkend AAAAAAAAAF}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -436,8 +438,8 @@ int The number of intput channels to the classifer class "classfier". \par
 {\b 
 void MobileNetV2::load_weights (std::string  {\i pt}){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAH}
-{\bkmkend AAAAAAAAAH}
+{\bkmkstart AAAAAAAAAG}
+{\bkmkend AAAAAAAAAG}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -462,8 +464,8 @@ Parameters\par}
 {\b 
 static torch::Tensor MobileNetV2::preprocess (cv::Mat  {\i img}, bool  {\i resizeOnly} = {\f2 false}){\f2 [inline]}, {\f2 [static]}}}
 \par
-{\bkmkstart AAAAAAAAAI}
-{\bkmkend AAAAAAAAAI}
+{\bkmkstart AAAAAAAAAH}
+{\bkmkend AAAAAAAAAH}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -501,8 +503,8 @@ Member Data Documentation\par
 {\b 
 torch::nn::Sequential MobileNetV2::classifier}}
 \par
-{\bkmkstart AAAAAAAAAJ}
-{\bkmkend AAAAAAAAAJ}
+{\bkmkstart AAAAAAAAAI}
+{\bkmkend AAAAAAAAAI}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -518,16 +520,16 @@ This can be replaced by a custom classifier for transfer learning. \par
 {\b 
 constexpr char MobileNetV2::classifierModuleName[] = "classifier"{\f2 [static]}, {\f2 [constexpr]}}}
 \par
-{\bkmkstart AAAAAAAAAK}
-{\bkmkend AAAAAAAAAK}
+{\bkmkstart AAAAAAAAAJ}
+{\bkmkend AAAAAAAAAJ}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Name of the classifier module. }}\par
+Name of the classifier submodule. }}\par
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-The name of the classifier module is needed whne replacing the default classifier. \par
+This is used for module registration and appears as part of the key in named_parametes. The name of the classifier module is needed when replacing the default classifier. \par
 }}
 {\xe \v features\:MobileNetV2}
 {\xe \v MobileNetV2\:features}
@@ -535,8 +537,8 @@ The name of the classifier module is needed whne replacing the default classifie
 {\b 
 torch::nn::Sequential MobileNetV2::features}}
 \par
-{\bkmkstart AAAAAAAAAL}
-{\bkmkend AAAAAAAAAL}
+{\bkmkstart AAAAAAAAAK}
+{\bkmkend AAAAAAAAAK}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -545,6 +547,23 @@ torch::nn::Sequential MobileNetV2::features}}
 Features submodule. }}\par
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 This needs to be accessible for transfer learning which then will disable learning here. \par
+}}
+{\xe \v featuresModuleName\:MobileNetV2}
+{\xe \v MobileNetV2\:featuresModuleName}
+\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
+{\b 
+constexpr char MobileNetV2::featuresModuleName[] = "features"{\f2 [static]}, {\f2 [constexpr]}}}
+\par
+{\bkmkstart AAAAAAAAAL}
+{\bkmkend AAAAAAAAAL}
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
+\par
+{
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Name of the features submodule. }}\par
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+This is used for module registration and appears as part of the key in named_parametes. \par
 }}
 {\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
 The documentation for this class was generated from the following file:{\par
@@ -588,346 +607,345 @@ mobilenet_v2.h\par \pard\plain
 30 {\cf17 class }MobileNetV2 : {\cf17 public} torch::nn::Module\par
 31 \{\par
 32 {\cf17 public}:\par
-33     {\cf20 // Module name of the feature detector.}\par
-34     {\cf17 static} {\cf17 constexpr} {\cf18 char} featuresModuleName[] = {\cf22 "features"};\par
-35 \par
-41     {\cf17 static} {\cf17 constexpr} {\cf18 char} classifierModuleName[] = {\cf22 "classifier"};\par
-42 \par
-53     MobileNetV2({\cf18 int} num_classes = 1000, {\cf18 float} width_mult = 1.0f, {\cf18 int} round_nearest = 8, {\cf18 float} dropout = 0.2)\par
-54     \{\par
-55         {\cf18 int} input_channels = 32;\par
-56         input_channels = make_divisible(input_channels * width_mult, round_nearest);\par
-57         features_output_channels = make_divisible(features_output_channels * std::max(1.0f, width_mult), round_nearest);\par
-58 \par
-59         features = torch::nn::Sequential();\par
-60 \par
-61         features->push_back(\par
-62             Conv2dNormActivation(3,\par
-63                                  input_channels,\par
-64                                  {\cf20 /*kernel_size=*/}3,\par
-65                                  {\cf20 /*stride =*/}2));\par
-66 \par
-67         {\cf20 // inverted residual blocks}\par
-68         {\cf19 for} ({\cf17 const} {\cf17 auto} &cfg : inverted_residual_setting)\par
-69         \{\par
-70             {\cf17 const} {\cf18 int} t = cfg[0];\par
-71             {\cf17 const} {\cf18 int} c = cfg[1];\par
-72             {\cf17 const} {\cf18 int} n = cfg[2];\par
-73             {\cf17 const} {\cf18 int} s = cfg[3];\par
+43     MobileNetV2({\cf18 int} num_classes = 1000, {\cf18 float} width_mult = 1.0f, {\cf18 int} round_nearest = 8, {\cf18 float} dropout = 0.2)\par
+44     \{\par
+45         {\cf18 int} input_channels = 32;\par
+46         input_channels = make_divisible(input_channels * width_mult, round_nearest);\par
+47         features_output_channels = make_divisible(features_output_channels * std::max(1.0f, width_mult), round_nearest);\par
+48 \par
+49         features = torch::nn::Sequential();\par
+50 \par
+51         features->push_back(\par
+52             Conv2dNormActivation(3,\par
+53                                  input_channels,\par
+54                                  {\cf20 /*kernel_size=*/}3,\par
+55                                  {\cf20 /*stride =*/}2));\par
+56 \par
+57         {\cf20 // inverted residual blocks}\par
+58         {\cf19 for} ({\cf17 const} {\cf17 auto} &cfg : inverted_residual_setting)\par
+59         \{\par
+60             {\cf17 const} {\cf18 int} t = cfg[0];\par
+61             {\cf17 const} {\cf18 int} c = cfg[1];\par
+62             {\cf17 const} {\cf18 int} n = cfg[2];\par
+63             {\cf17 const} {\cf18 int} s = cfg[3];\par
+64 \par
+65             {\cf18 int} output_channel = make_divisible(c * width_mult, round_nearest);\par
+66             {\cf19 for} ({\cf18 int} i = 0; i < n; ++i)\par
+67             \{\par
+68                 {\cf17 const} {\cf18 int} stride = (i == 0) ? s : 1;\par
+69                 features->push_back(\par
+70                     InvertedResidual(input_channels, output_channel, stride, t));\par
+71                 input_channels = output_channel;\par
+72             \}\par
+73         \}\par
 74 \par
-75             {\cf18 int} output_channel = make_divisible(c * width_mult, round_nearest);\par
-76             {\cf19 for} ({\cf18 int} i = 0; i < n; ++i)\par
-77             \{\par
-78                 {\cf17 const} {\cf18 int} stride = (i == 0) ? s : 1;\par
-79                 features->push_back(\par
-80                     InvertedResidual(input_channels, output_channel, stride, t));\par
-81                 input_channels = output_channel;\par
-82             \}\par
-83         \}\par
-84 \par
-85         features->push_back(\par
-86             Conv2dNormActivation(input_channels,\par
-87                                  features_output_channels,\par
-88                                  {\cf20 /*kernel_size=*/}1));\par
-89 \par
-90         register_module(featuresModuleName, features);\par
-91 \par
-92         {\cf20 // classifier: Dropout + Linear}\par
-93         classifier = torch::nn::Sequential();\par
-94         classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(dropout)));\par
-95         classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(features_output_channels, num_classes)));\par
-96         register_module(classifierModuleName, classifier);\par
-97     \}\par
-98 \par
-106     {\cf18 int} getNinputChannels4Classifier(){\cf17  const}\par
-107 {\cf17     }\{\par
-108         {\cf19 return} features_output_channels;\par
-109     \}\par
-110 \par
-117     torch::Tensor forward(torch::Tensor x)\par
-118     \{\par
-119         x = features->forward(x);\par
-120         {\cf17 const} torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions(\{1, 1\});\par
-121         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);\par
-122         x = torch::flatten(x, 1);\par
-123         x = classifier->forward(x);\par
-124         {\cf19 return} x;\par
-125     \}\par
-126 \par
-130     {\cf18 void} initialize_weights()\par
-131     \{\par
-132         {\cf19 for} ({\cf17 auto} &module : modules({\cf20 /*include_self=*/}{\cf17 false}))\par
-133         \{\par
-134             {\cf19 if} ({\cf17 auto} M = {\cf17 dynamic_cast<}torch::nn::Conv2dImpl *{\cf17 >}(module.get()))\par
-135             \{\par
-136                 torch::nn::init::kaiming_normal_(M->weight, {\cf20 /*a=*/}0, torch::kFanOut, torch::kReLU);\par
-137                 {\cf19 if} (M->options.bias())\par
-138                     torch::nn::init::zeros_(M->bias);\par
-139             \}\par
-140             {\cf19 else} {\cf19 if} ({\cf17 auto} M = {\cf17 dynamic_cast<}torch::nn::BatchNorm2dImpl *{\cf17 >}(module.get()))\par
-141             \{\par
-142                 torch::nn::init::ones_(M->weight);\par
-143                 torch::nn::init::zeros_(M->bias);\par
-144             \}\par
-145             {\cf19 else} {\cf19 if} ({\cf17 auto} M = {\cf17 dynamic_cast<}torch::nn::LinearImpl *{\cf17 >}(module.get()))\par
-146             \{\par
-147                 torch::nn::init::normal_(M->weight, 0.0, 0.01);\par
-148                 torch::nn::init::zeros_(M->bias);\par
-149             \}\par
-150         \}\par
-151     \}\par
-152 \par
-159     {\cf18 void} load_weights(std::string pt)\par
-160     \{\par
-161         std::ifstream input(pt, std::ios::binary);\par
-162         input.exceptions(input.failbit);\par
-163         std::vector<char> bytes(\par
-164             (std::istreambuf_iterator<char>(input)),\par
-165             (std::istreambuf_iterator<char>()));\par
-166         input.close();\par
-167         {\cf17 const} c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();\par
-168         {\cf19 if} (debugOutput)\par
-169         \{\par
-170             std::cerr << {\cf22 "Parameters we have in this model here: "} << std::endl;\par
-171             {\cf19 for} ({\cf17 auto} {\cf17 const} &m : named_parameters())\par
-172             \{\par
-173                 {\cf17 auto} k = ourkey2torchvision(m.key());\par
-174                 std::cerr << m.key() << {\cf22 "->"} << k << {\cf22 ": "} << m.value().sizes() << std::endl;\par
-175             \}\par
-176             std::cerr << {\cf22 "Named buffers we have in this model here: "} << std::endl;\par
-177             {\cf19 for} ({\cf17 const} {\cf17 auto} &b : named_buffers())\par
-178             \{\par
-179                 {\cf17 auto} k = ourkey2torchvision(b.key());\par
-180                 std::cout << b.key() << {\cf22 "->"} << k << {\cf22 ": "} << b.value().sizes() << std::endl;\par
-181             \}\par
-182             std::cerr << {\cf22 "Parameters we have in the weight file "} << pt << {\cf22 ":"} << std::endl;\par
-183             {\cf19 for} ({\cf17 auto} {\cf17 const} &w : weights)\par
-184             \{\par
-185                 std::cerr << w.key() << {\cf22 ": "} << w.value().toTensor().sizes() << std::endl;\par
-186             \}\par
-187         \}\par
-188         torch::NoGradGuard no_grad;\par
-189         {\cf19 if} (debugOutput)\par
-190             std::cerr << {\cf22 "Loading weights"} << std::endl;\par
-191         {\cf19 for} ({\cf17 auto} &m : named_parameters())\par
-192         \{\par
-193             {\cf17 const} std::string model_key = m.key();\par
-194             {\cf17 const} std::string model_key4torchvision = ourkey2torchvision(model_key);\par
-195             {\cf19 if} (debugOutput)\par
-196                 std::cerr << {\cf22 "Searching for: "} << model_key4torchvision << {\cf22 ": "} << m.value().sizes() << std::endl;\par
-197             {\cf18 bool} foundit = {\cf17 false};\par
-198             {\cf19 for} ({\cf17 auto} {\cf17 const} &w : weights)\par
-199             \{\par
-200                 {\cf19 if} (model_key4torchvision == w.key())\par
-201                 \{\par
-202                     {\cf19 if} (debugOutput)\par
-203                         std::cerr << {\cf22 "Found it: "} << w.key() << std::endl;\par
-204                     m.value().copy_(w.value().toTensor());\par
-205                     foundit = {\cf17 true};\par
-206                     {\cf19 break};\par
-207                 \}\par
-208             \}\par
-209             {\cf19 if} (!foundit)\par
-210                 std::cerr << {\cf22 "Key: "} << model_key4torchvision << {\cf22 " could not be found!"} << std::endl;\par
-211         \}\par
-212         {\cf19 if} (debugOutput)\par
-213             std::cerr << {\cf22 "Loading named buffers"} << std::endl;\par
-214         {\cf19 for} ({\cf17 auto} &b : named_buffers())\par
-215         \{\par
-216             std::string model_key = b.key();\par
-217             std::string model_key4torchvision = ourkey2torchvision(model_key);\par
-218             {\cf19 if} (debugOutput)\par
-219                 std::cerr << {\cf22 "Searching for: "} << model_key4torchvision << {\cf22 ": "} << b.value().sizes() << std::endl;\par
-220             {\cf18 bool} foundit = {\cf17 false};\par
-221             {\cf19 for} ({\cf17 auto} {\cf17 const} &w : weights)\par
-222             \{\par
-223                 {\cf19 if} (model_key4torchvision == w.key())\par
-224                 \{\par
-225                     {\cf19 if} (debugOutput)\par
-226                         std::cerr << {\cf22 "Found it: "} << w.key() << std::endl;\par
-227                     b.value().copy_(w.value().toTensor());\par
-228                     foundit = {\cf17 true};\par
-229                     {\cf19 break};\par
-230                 \}\par
-231             \}\par
-232             {\cf19 if} (!foundit)\par
-233                 std::cerr << {\cf22 "Key: "} << model_key4torchvision << {\cf22 " could not be found!"} << std::endl;\par
-234         \}\par
-235     \}\par
-236 \par
-247     {\cf17 static} torch::Tensor preprocess(cv::Mat img, {\cf18 bool} resizeOnly = {\cf17 false})\par
-248     \{\par
-249         {\cf17 constexpr} {\cf18 int} imageSizeBeforeCrop = 256;\par
-250         {\cf17 constexpr} {\cf18 int} finalImageSize = 224;\par
-251         {\cf17 constexpr} {\cf18 int} numChannels = 3; {\cf20 // colour}\par
-252 \par
-253         {\cf19 if} (img.depth() != CV_8U)\par
-254             {\cf19 throw} std::invalid_argument({\cf22 "Image is not 8bit."});\par
-255         {\cf19 if} (img.channels() != numChannels)\par
-256             {\cf19 throw} std::invalid_argument({\cf22 "Image is not BGR / colour."});\par
-257 \par
-258         {\cf19 if} (resizeOnly)\par
-259         \{\par
-260             cv::resize(img, img, cv::Size(finalImageSize, finalImageSize));\par
-261         \}\par
-262         {\cf19 else}\par
+75         features->push_back(\par
+76             Conv2dNormActivation(input_channels,\par
+77                                  features_output_channels,\par
+78                                  {\cf20 /*kernel_size=*/}1));\par
+79 \par
+80         register_module(featuresModuleName, features);\par
+81 \par
+82         {\cf20 // classifier: Dropout + Linear}\par
+83         classifier = torch::nn::Sequential();\par
+84         classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(dropout)));\par
+85         classifier->push_back(torch::nn::Linear(torch::nn::LinearOptions(features_output_channels, num_classes)));\par
+86         register_module(classifierModuleName, classifier);\par
+87     \}\par
+88 \par
+93     {\cf17 static} {\cf17 constexpr} {\cf18 char} featuresModuleName[] = {\cf22 "features"};\par
+94 \par
+101     {\cf17 static} {\cf17 constexpr} {\cf18 char} classifierModuleName[] = {\cf22 "classifier"};\par
+102 \par
+110     {\cf18 int} getNinputChannels4Classifier(){\cf17  const}\par
+111 {\cf17     }\{\par
+112         {\cf19 return} features_output_channels;\par
+113     \}\par
+114 \par
+121     torch::Tensor forward(torch::Tensor x)\par
+122     \{\par
+123         x = features->forward(x);\par
+124         {\cf17 const} torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions(\{1, 1\});\par
+125         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);\par
+126         x = torch::flatten(x, 1);\par
+127         x = classifier->forward(x);\par
+128         {\cf19 return} x;\par
+129     \}\par
+130 \par
+134     {\cf18 void} initialize_weights()\par
+135     \{\par
+136         {\cf19 for} ({\cf17 auto} &module : modules({\cf20 /*include_self=*/}{\cf17 false}))\par
+137         \{\par
+138             {\cf19 if} ({\cf17 auto} M = {\cf17 dynamic_cast<}torch::nn::Conv2dImpl *{\cf17 >}(module.get()))\par
+139             \{\par
+140                 torch::nn::init::kaiming_normal_(M->weight, {\cf20 /*a=*/}0, torch::kFanOut, torch::kReLU);\par
+141                 {\cf19 if} (M->options.bias())\par
+142                     torch::nn::init::zeros_(M->bias);\par
+143             \}\par
+144             {\cf19 else} {\cf19 if} ({\cf17 auto} M = {\cf17 dynamic_cast<}torch::nn::BatchNorm2dImpl *{\cf17 >}(module.get()))\par
+145             \{\par
+146                 torch::nn::init::ones_(M->weight);\par
+147                 torch::nn::init::zeros_(M->bias);\par
+148             \}\par
+149             {\cf19 else} {\cf19 if} ({\cf17 auto} M = {\cf17 dynamic_cast<}torch::nn::LinearImpl *{\cf17 >}(module.get()))\par
+150             \{\par
+151                 torch::nn::init::normal_(M->weight, 0.0, 0.01);\par
+152                 torch::nn::init::zeros_(M->bias);\par
+153             \}\par
+154         \}\par
+155     \}\par
+156 \par
+163     {\cf18 void} load_weights(std::string pt)\par
+164     \{\par
+165         std::ifstream input(pt, std::ios::binary);\par
+166         input.exceptions(input.failbit);\par
+167         std::vector<char> bytes(\par
+168             (std::istreambuf_iterator<char>(input)),\par
+169             (std::istreambuf_iterator<char>()));\par
+170         input.close();\par
+171         {\cf17 const} c10::Dict<c10::IValue, c10::IValue> weights = torch::pickle_load(bytes).toGenericDict();\par
+172         {\cf19 if} (debugOutput)\par
+173         \{\par
+174             std::cerr << {\cf22 "Parameters we have in this model here: "} << std::endl;\par
+175             {\cf19 for} ({\cf17 auto} {\cf17 const} &m : named_parameters())\par
+176             \{\par
+177                 {\cf17 auto} k = ourkey2torchvision(m.key());\par
+178                 std::cerr << m.key() << {\cf22 "->"} << k << {\cf22 ": "} << m.value().sizes() << std::endl;\par
+179             \}\par
+180             std::cerr << {\cf22 "Named buffers we have in this model here: "} << std::endl;\par
+181             {\cf19 for} ({\cf17 const} {\cf17 auto} &b : named_buffers())\par
+182             \{\par
+183                 {\cf17 auto} k = ourkey2torchvision(b.key());\par
+184                 std::cout << b.key() << {\cf22 "->"} << k << {\cf22 ": "} << b.value().sizes() << std::endl;\par
+185             \}\par
+186             std::cerr << {\cf22 "Parameters we have in the weight file "} << pt << {\cf22 ":"} << std::endl;\par
+187             {\cf19 for} ({\cf17 auto} {\cf17 const} &w : weights)\par
+188             \{\par
+189                 std::cerr << w.key() << {\cf22 ": "} << w.value().toTensor().sizes() << std::endl;\par
+190             \}\par
+191         \}\par
+192         torch::NoGradGuard no_grad;\par
+193         {\cf19 if} (debugOutput)\par
+194             std::cerr << {\cf22 "Loading weights"} << std::endl;\par
+195         {\cf19 for} ({\cf17 auto} &m : named_parameters())\par
+196         \{\par
+197             {\cf17 const} std::string model_key = m.key();\par
+198             {\cf17 const} std::string model_key4torchvision = ourkey2torchvision(model_key);\par
+199             {\cf19 if} (debugOutput)\par
+200                 std::cerr << {\cf22 "Searching for: "} << model_key4torchvision << {\cf22 ": "} << m.value().sizes() << std::endl;\par
+201             {\cf18 bool} foundit = {\cf17 false};\par
+202             {\cf19 for} ({\cf17 auto} {\cf17 const} &w : weights)\par
+203             \{\par
+204                 {\cf19 if} (model_key4torchvision == w.key())\par
+205                 \{\par
+206                     {\cf19 if} (debugOutput)\par
+207                         std::cerr << {\cf22 "Found it: "} << w.key() << std::endl;\par
+208                     m.value().copy_(w.value().toTensor());\par
+209                     foundit = {\cf17 true};\par
+210                     {\cf19 break};\par
+211                 \}\par
+212             \}\par
+213             {\cf19 if} (!foundit)\par
+214                 std::cerr << {\cf22 "Key: "} << model_key4torchvision << {\cf22 " could not be found!"} << std::endl;\par
+215         \}\par
+216         {\cf19 if} (debugOutput)\par
+217             std::cerr << {\cf22 "Loading named buffers"} << std::endl;\par
+218         {\cf19 for} ({\cf17 auto} &b : named_buffers())\par
+219         \{\par
+220             std::string model_key = b.key();\par
+221             std::string model_key4torchvision = ourkey2torchvision(model_key);\par
+222             {\cf19 if} (debugOutput)\par
+223                 std::cerr << {\cf22 "Searching for: "} << model_key4torchvision << {\cf22 ": "} << b.value().sizes() << std::endl;\par
+224             {\cf18 bool} foundit = {\cf17 false};\par
+225             {\cf19 for} ({\cf17 auto} {\cf17 const} &w : weights)\par
+226             \{\par
+227                 {\cf19 if} (model_key4torchvision == w.key())\par
+228                 \{\par
+229                     {\cf19 if} (debugOutput)\par
+230                         std::cerr << {\cf22 "Found it: "} << w.key() << std::endl;\par
+231                     b.value().copy_(w.value().toTensor());\par
+232                     foundit = {\cf17 true};\par
+233                     {\cf19 break};\par
+234                 \}\par
+235             \}\par
+236             {\cf19 if} (!foundit)\par
+237                 std::cerr << {\cf22 "Key: "} << model_key4torchvision << {\cf22 " could not be found!"} << std::endl;\par
+238         \}\par
+239     \}\par
+240 \par
+251     {\cf17 static} torch::Tensor preprocess(cv::Mat img, {\cf18 bool} resizeOnly = {\cf17 false})\par
+252     \{\par
+253         {\cf17 constexpr} {\cf18 int} imageSizeBeforeCrop = 256;\par
+254         {\cf17 constexpr} {\cf18 int} finalImageSize = 224;\par
+255         {\cf17 constexpr} {\cf18 int} numChannels = 3; {\cf20 // colour}\par
+256 \par
+257         {\cf19 if} (img.depth() != CV_8U)\par
+258             {\cf19 throw} std::invalid_argument({\cf22 "Image is not 8bit."});\par
+259         {\cf19 if} (img.channels() != numChannels)\par
+260             {\cf19 throw} std::invalid_argument({\cf22 "Image is not BGR / colour."});\par
+261 \par
+262         {\cf19 if} (resizeOnly)\par
 263         \{\par
-264             cv::resize(img, img, cv::Size(imageSizeBeforeCrop, imageSizeBeforeCrop));\par
-265             {\cf17 constexpr} {\cf18 int} start = (imageSizeBeforeCrop - finalImageSize) / 2;\par
-266             {\cf17 const} cv::Rect roi(start, start, finalImageSize, finalImageSize);\par
-267             img = img(roi).clone();\par
-268         \}\par
-269         cv::cvtColor(img, img, cv::COLOR_BGR2RGB);\par
-270 \par
-271         torch::Tensor tensor = torch::from_blob(img.data, \{img.rows, img.cols, 3\}, torch::kByte);\par
-272         tensor = tensor.permute(\{2, 0, 1\}).to(torch::kFloat).div_(255.0);\par
-273         tensor = torch::data::transforms::Normalize(\{0.485, 0.456, 0.406\}, \{0.229, 0.224, 0.225\})(tensor);\par
-274         {\cf19 return} tensor;\par
-275     \}\par
-276 \par
-281     torch::nn::Sequential classifier;\par
-282 \par
-287     torch::nn::Sequential features;\par
-288 \par
-289 {\cf17 private}:\par
-290     {\cf20 // Helper which maps the libtorch keys to pytorch keys.}\par
-291     std::string ourkey2torchvision(std::string k){\cf17  const}\par
-292 {\cf17     }\{\par
-293         {\cf20 // called simply "conv" in the weights file}\par
-294         k = std::regex_replace(k, std::regex(InvertedResidual::className), {\cf22 "conv"});\par
-295         {\cf20 // not used at all in the weights file}\par
-296         {\cf17 const} std::string r = std::string(Conv2dNormActivation::className) + {\cf22 "\\\\."};\par
-297         k = std::regex_replace(k, std::regex(r), {\cf22 ""});\par
-298         {\cf19 return} k;\par
-299     \}\par
-300 \par
-301     {\cf20 // Makes a value divisible.}\par
-302     {\cf17 inline} {\cf18 int} make_divisible({\cf18 int} v, {\cf18 int} divisor = 8, {\cf18 int} min_value = -1){\cf17  const}\par
-303 {\cf17     }\{\par
-304         {\cf19 if} (min_value < 0)\par
-305             min_value = divisor;\par
-306         {\cf18 int} new_v = std::max(min_value, (({\cf18 int})((({\cf18 int})(v + divisor / 2)) / divisor)) * divisor);\par
-307         {\cf19 if} (new_v < (0.9 * ({\cf18 float})v))\par
-308             new_v += divisor;\par
-309         {\cf19 return} new_v;\par
-310     \}\par
-311 \par
-312     {\cf20 // Features output channels but can be scaled.}\par
-313     {\cf18 int} features_output_channels = 1280;\par
-314 \par
-315     {\cf20 // MobileNetV2 inverted residual settings:}\par
-316     {\cf20 // t, c, n, s  (expansion, output channels, repeats, stride)}\par
-317     {\cf17 const} std::vector<std::array<int, 4>> inverted_residual_setting = \{\par
-318         \{1, 16, 1, 1\},\par
-319         \{6, 24, 2, 2\},\par
-320         \{6, 32, 3, 2\},\par
-321         \{6, 64, 4, 2\},\par
-322         \{6, 96, 3, 1\},\par
-323         \{6, 160, 3, 2\},\par
-324         \{6, 320, 1, 1\},\par
-325     \};\par
-326 \par
-331     {\cf17 class }Conv2dNormActivation : {\cf17 public} torch::nn::Module\par
-332     \{\par
-333     {\cf17 public}:\par
-334         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "Conv2dNormActivation"};\par
-335 \par
-336         {\cf17 static} {\cf17 inline} torch::Tensor relu6({\cf17 const} torch::Tensor &x)\par
-337         \{\par
-338             {\cf19 return} torch::clamp(torch::relu(x), 0, 6);\par
-339         \}\par
-340 \par
-341         Conv2dNormActivation({\cf18 int} in_channels,\par
-342                              {\cf18 int} out_channels,\par
-343                              {\cf18 int} kernel_size = 3,\par
-344                              {\cf18 int} stride = 1,\par
-345                              {\cf18 int} padding = -1,\par
-346                              {\cf18 int} groups = 1)\par
-347         \{\par
-348             {\cf17 const} {\cf18 int} dilation = 1;\par
-349             conv = torch::nn::Sequential();\par
-350             {\cf19 if} (padding < 0)\par
-351             \{\par
-352                 padding = (kernel_size - 1) / 2 * dilation;\par
-353             \}\par
-354             conv->push_back(torch::nn::Conv2d(\par
-355                 torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)\par
-356                     .stride(stride)\par
-357                     .padding(padding)\par
-358                     .groups(groups)\par
-359                     .bias({\cf17 false})));\par
-360             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));\par
-361             conv->push_back(torch::nn::Functional(relu6));\par
-362             register_module(className, conv);\par
-363         \}\par
-364 \par
-365         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
-366         \{\par
-367             {\cf19 return} conv->forward(x);\par
-368         \}\par
-369 \par
-370     {\cf17 private}:\par
-371         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
-372     \};\par
+264             cv::resize(img, img, cv::Size(finalImageSize, finalImageSize));\par
+265         \}\par
+266         {\cf19 else}\par
+267         \{\par
+268             cv::resize(img, img, cv::Size(imageSizeBeforeCrop, imageSizeBeforeCrop));\par
+269             {\cf17 constexpr} {\cf18 int} start = (imageSizeBeforeCrop - finalImageSize) / 2;\par
+270             {\cf17 const} cv::Rect roi(start, start, finalImageSize, finalImageSize);\par
+271             img = img(roi).clone();\par
+272         \}\par
+273         cv::cvtColor(img, img, cv::COLOR_BGR2RGB);\par
+274 \par
+275         torch::Tensor tensor = torch::from_blob(img.data, \{img.rows, img.cols, 3\}, torch::kByte);\par
+276         tensor = tensor.permute(\{2, 0, 1\}).to(torch::kFloat).div_(255.0);\par
+277         tensor = torch::data::transforms::Normalize(\{0.485, 0.456, 0.406\}, \{0.229, 0.224, 0.225\})(tensor);\par
+278         {\cf19 return} tensor;\par
+279     \}\par
+280 \par
+285     torch::nn::Sequential classifier;\par
+286 \par
+291     torch::nn::Sequential features;\par
+292 \par
+293 {\cf17 private}:\par
+294     {\cf20 // Helper which maps the libtorch keys to pytorch keys.}\par
+295     std::string ourkey2torchvision(std::string k){\cf17  const}\par
+296 {\cf17     }\{\par
+297         {\cf20 // called simply "conv" in the weights file}\par
+298         k = std::regex_replace(k, std::regex(InvertedResidual::className), {\cf22 "conv"});\par
+299         {\cf20 // not used at all in the weights file}\par
+300         {\cf17 const} std::string r = std::string(Conv2dNormActivation::className) + {\cf22 "\\\\."};\par
+301         k = std::regex_replace(k, std::regex(r), {\cf22 ""});\par
+302         {\cf19 return} k;\par
+303     \}\par
+304 \par
+305     {\cf20 // Makes a value divisible.}\par
+306     {\cf17 inline} {\cf18 int} make_divisible({\cf18 int} v, {\cf18 int} divisor = 8, {\cf18 int} min_value = -1){\cf17  const}\par
+307 {\cf17     }\{\par
+308         {\cf19 if} (min_value < 0)\par
+309             min_value = divisor;\par
+310         {\cf18 int} new_v = std::max(min_value, (({\cf18 int})((({\cf18 int})(v + divisor / 2)) / divisor)) * divisor);\par
+311         {\cf19 if} (new_v < (0.9 * ({\cf18 float})v))\par
+312             new_v += divisor;\par
+313         {\cf19 return} new_v;\par
+314     \}\par
+315 \par
+316     {\cf20 // Features output channels but can be scaled.}\par
+317     {\cf18 int} features_output_channels = 1280;\par
+318 \par
+319     {\cf20 // MobileNetV2 inverted residual settings:}\par
+320     {\cf20 // t, c, n, s  (expansion, output channels, repeats, stride)}\par
+321     {\cf17 const} std::vector<std::array<int, 4>> inverted_residual_setting = \{\par
+322         \{1, 16, 1, 1\},\par
+323         \{6, 24, 2, 2\},\par
+324         \{6, 32, 3, 2\},\par
+325         \{6, 64, 4, 2\},\par
+326         \{6, 96, 3, 1\},\par
+327         \{6, 160, 3, 2\},\par
+328         \{6, 320, 1, 1\},\par
+329     \};\par
+330 \par
+335     {\cf17 class }Conv2dNormActivation : {\cf17 public} torch::nn::Module\par
+336     \{\par
+337     {\cf17 public}:\par
+338         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "Conv2dNormActivation"};\par
+339 \par
+340         {\cf17 static} {\cf17 inline} torch::Tensor relu6({\cf17 const} torch::Tensor &x)\par
+341         \{\par
+342             {\cf19 return} torch::clamp(torch::relu(x), 0, 6);\par
+343         \}\par
+344 \par
+345         Conv2dNormActivation({\cf18 int} in_channels,\par
+346                              {\cf18 int} out_channels,\par
+347                              {\cf18 int} kernel_size = 3,\par
+348                              {\cf18 int} stride = 1,\par
+349                              {\cf18 int} padding = -1,\par
+350                              {\cf18 int} groups = 1)\par
+351         \{\par
+352             {\cf17 const} {\cf18 int} dilation = 1;\par
+353             conv = torch::nn::Sequential();\par
+354             {\cf19 if} (padding < 0)\par
+355             \{\par
+356                 padding = (kernel_size - 1) / 2 * dilation;\par
+357             \}\par
+358             conv->push_back(torch::nn::Conv2d(\par
+359                 torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)\par
+360                     .stride(stride)\par
+361                     .padding(padding)\par
+362                     .groups(groups)\par
+363                     .bias({\cf17 false})));\par
+364             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));\par
+365             conv->push_back(torch::nn::Functional(relu6));\par
+366             register_module(className, conv);\par
+367         \}\par
+368 \par
+369         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
+370         \{\par
+371             {\cf19 return} conv->forward(x);\par
+372         \}\par
 373 \par
-378     {\cf17 class }InvertedResidual : {\cf17 public} torch::nn::Module\par
-379     \{\par
-380     {\cf17 public}:\par
-381         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "InvertedResidual"};\par
-382 \par
-383         InvertedResidual({\cf18 int} inp, {\cf18 int} oup, {\cf18 int} stride, {\cf18 int} expand_ratio)\par
-384         \{\par
-385             {\cf19 if} ((stride < 1) || (stride > 2))\par
-386             \{\par
-387                 {\cf19 throw} std::invalid_argument({\cf22 "Stride needs to be 1 or 2."});\par
-388             \}\par
-389             {\cf17 const} {\cf18 int} hidden_dim = (int)round(inp * expand_ratio);\par
-390             use_res_connect = (stride == 1) && (inp == oup);\par
-391 \par
-392             conv = torch::nn::Sequential();\par
-393 \par
-394             {\cf19 if} (expand_ratio != 1)\par
-395             \{\par
-396                 conv->push_back(\par
-397                     Conv2dNormActivation(inp,\par
-398                                          hidden_dim,\par
-399                                          {\cf20 /*kernel_size*/} 1));\par
-400             \}\par
-401 \par
-402             conv->push_back(\par
-403                 Conv2dNormActivation(hidden_dim,\par
-404                                      hidden_dim,\par
-405                                      {\cf20 /*kernel_size=*/}3,\par
-406                                      {\cf20 /*stride=*/}stride,\par
-407                                      {\cf20 /*padding=*/}-1,\par
-408                                      {\cf20 /*groups=*/}hidden_dim));\par
-409 \par
-410             conv->push_back(torch::nn::Conv2d(\par
-411                 torch::nn::Conv2dOptions(hidden_dim, oup,\par
-412                                          {\cf20 /*kernel_size=*/}1)\par
-413                     .stride(1)\par
-414                     .padding(0)\par
-415                     .bias({\cf17 false})));\par
-416             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));\par
-417 \par
-418             register_module(className, conv);\par
-419         \}\par
-420 \par
-421         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
-422         \{\par
-423             {\cf19 if} (use_res_connect)\par
-424             \{\par
-425                 {\cf19 return} x + conv->forward(x);\par
-426             \}\par
-427             {\cf19 else}\par
+374     {\cf17 private}:\par
+375         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
+376     \};\par
+377 \par
+382     {\cf17 class }InvertedResidual : {\cf17 public} torch::nn::Module\par
+383     \{\par
+384     {\cf17 public}:\par
+385         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "InvertedResidual"};\par
+386 \par
+387         InvertedResidual({\cf18 int} inp, {\cf18 int} oup, {\cf18 int} stride, {\cf18 int} expand_ratio)\par
+388         \{\par
+389             {\cf19 if} ((stride < 1) || (stride > 2))\par
+390             \{\par
+391                 {\cf19 throw} std::invalid_argument({\cf22 "Stride needs to be 1 or 2."});\par
+392             \}\par
+393             {\cf17 const} {\cf18 int} hidden_dim = (int)round(inp * expand_ratio);\par
+394             use_res_connect = (stride == 1) && (inp == oup);\par
+395 \par
+396             conv = torch::nn::Sequential();\par
+397 \par
+398             {\cf19 if} (expand_ratio != 1)\par
+399             \{\par
+400                 conv->push_back(\par
+401                     Conv2dNormActivation(inp,\par
+402                                          hidden_dim,\par
+403                                          {\cf20 /*kernel_size*/} 1));\par
+404             \}\par
+405 \par
+406             conv->push_back(\par
+407                 Conv2dNormActivation(hidden_dim,\par
+408                                      hidden_dim,\par
+409                                      {\cf20 /*kernel_size=*/}3,\par
+410                                      {\cf20 /*stride=*/}stride,\par
+411                                      {\cf20 /*padding=*/}-1,\par
+412                                      {\cf20 /*groups=*/}hidden_dim));\par
+413 \par
+414             conv->push_back(torch::nn::Conv2d(\par
+415                 torch::nn::Conv2dOptions(hidden_dim, oup,\par
+416                                          {\cf20 /*kernel_size=*/}1)\par
+417                     .stride(1)\par
+418                     .padding(0)\par
+419                     .bias({\cf17 false})));\par
+420             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));\par
+421 \par
+422             register_module(className, conv);\par
+423         \}\par
+424 \par
+425         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
+426         \{\par
+427             {\cf19 if} (use_res_connect)\par
 428             \{\par
-429                 {\cf19 return} conv->forward(x);\par
+429                 {\cf19 return} x + conv->forward(x);\par
 430             \}\par
-431         \}\par
-432         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
-433         {\cf18 bool} use_res_connect;\par
-434     \};\par
-435 \};\par
+431             {\cf19 else}\par
+432             \{\par
+433                 {\cf19 return} conv->forward(x);\par
+434             \}\par
+435         \}\par
+436         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
+437         {\cf18 bool} use_res_connect;\par
+438     \};\par
+439 \};\par
 }
 
 \pard\plain \sect\sbkpage
