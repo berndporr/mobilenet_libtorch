@@ -1,8 +1,8 @@
 var hierarchy =
 [
     [ "torch::nn::Module", null, [
-      [ "Conv2dNormActivation", "structConv2dNormActivation.html", null ],
-      [ "InvertedResidual", "structInvertedResidual.html", null ],
-      [ "MobileNetV2", "structMobileNetV2.html", null ]
+      [ "Conv2dNormActivation", "classConv2dNormActivation.html", null ],
+      [ "InvertedResidual", "classInvertedResidual.html", null ],
+      [ "MobileNetV2", "classMobileNetV2.html", null ]
     ] ]
 ];

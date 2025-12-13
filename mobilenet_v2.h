@@ -27,9 +27,9 @@ constexpr bool debugOutput = true;
  * @brief Module which performs Convolution, Batch Norm and Relu6.
  * See https://github.com/pytorch/vision/blob/main/torchvision/ops/misc.py#L126
  */
-struct Conv2dNormActivation : torch::nn::Module
+class Conv2dNormActivation : public torch::nn::Module
 {
-    torch::nn::Sequential conv{nullptr};
+public:
     static constexpr char className[] = "Conv2dNormActivation";
 
     static inline torch::Tensor relu6(const torch::Tensor &x)
@@ -65,16 +65,18 @@ struct Conv2dNormActivation : torch::nn::Module
     {
         return conv->forward(x);
     }
+
+private:
+    torch::nn::Sequential conv{nullptr};
 };
 
 /**
  * @brief Inverted residual
  * Converted from https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L19
  */
-struct InvertedResidual : torch::nn::Module
+class InvertedResidual : public torch::nn::Module
 {
-    torch::nn::Sequential conv{nullptr};
-    bool use_res_connect;
+public:
     static constexpr char className[] = "InvertedResidual";
 
     InvertedResidual(int inp, int oup, int stride, int expand_ratio)
@@ -126,30 +128,17 @@ struct InvertedResidual : torch::nn::Module
             return conv->forward(x);
         }
     }
+    torch::nn::Sequential conv{nullptr};
+    bool use_res_connect;
 };
 
 /**
  * @brief Implementation of MobileNetV2 as done in py-torchvision
  * See: // https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L66
  */
-struct MobileNetV2 : torch::nn::Module
+class MobileNetV2 : public torch::nn::Module
 {
-    torch::nn::Sequential features{nullptr};
-    torch::nn::Sequential classifier{nullptr}; // Dropout + Linear
-    int features_output_channels = 1280;
-
-    // MobileNetV2 inverted residual settings:
-    // t, c, n, s  (expansion, output channels, repeats, stride)
-    const std::vector<std::array<int, 4>> inverted_residual_setting = {
-        {1, 16, 1, 1},
-        {6, 24, 2, 2},
-        {6, 32, 3, 2},
-        {6, 64, 4, 2},
-        {6, 96, 3, 1},
-        {6, 160, 3, 2},
-        {6, 320, 1, 1},
-    };
-
+public:
     // Module name of the feature detector.
     static constexpr char featuresModuleName[] = "features";
 
@@ -268,16 +257,6 @@ struct MobileNetV2 : torch::nn::Module
                 torch::nn::init::zeros_(M->bias);
             }
         }
-    }
-
-    std::string ourkey2torchvision(std::string k) const
-    {
-        // called simply "conv" in the weights file
-        k = std::regex_replace(k, std::regex(InvertedResidual::className), "conv");
-        // not used at all in the weights file
-        const std::string r = std::string(Conv2dNormActivation::className) + "\\.";
-        k = std::regex_replace(k, std::regex(r), "");
-        return k;
     }
 
     /**
@@ -404,6 +383,32 @@ struct MobileNetV2 : torch::nn::Module
         return tensor;
     }
 
+    /**
+     * @brief Classifier submodule
+     * This can be replaced by a custom classifier for transfer learning.
+     */
+    torch::nn::Sequential classifier{nullptr}; // Dropout + Linear
+
+    /**
+     * @brief Features submodule
+     * This needs to be accessible for transfer learning which then will disable learning here.
+     */
+    torch::nn::Sequential features{nullptr};
+
+    private:
+
+    // helper which maps the libtorch keys to pytorch keys
+    std::string ourkey2torchvision(std::string k) const
+    {
+        // called simply "conv" in the weights file
+        k = std::regex_replace(k, std::regex(InvertedResidual::className), "conv");
+        // not used at all in the weights file
+        const std::string r = std::string(Conv2dNormActivation::className) + "\\.";
+        k = std::regex_replace(k, std::regex(r), "");
+        return k;
+    }
+
+    // makes a value divisible
     inline int make_divisible(int v, int divisor = 8, int min_value = -1) const
     {
         if (min_value < 0)
@@ -413,4 +418,19 @@ struct MobileNetV2 : torch::nn::Module
             new_v += divisor;
         return new_v;
     }
+
+    // features output channels but can be scaled
+    int features_output_channels = 1280;
+
+    // MobileNetV2 inverted residual settings:
+    // t, c, n, s  (expansion, output channels, repeats, stride)
+    const std::vector<std::array<int, 4>> inverted_residual_setting = {
+        {1, 16, 1, 1},
+        {6, 24, 2, 2},
+        {6, 32, 3, 2},
+        {6, 64, 4, 2},
+        {6, 96, 3, 1},
+        {6, 160, 3, 2},
+        {6, 320, 1, 1},
+    };
 };

@@ -1,6 +1,6 @@
 var annotated_dup =
 [
-    [ "Conv2dNormActivation", "structConv2dNormActivation.html", null ],
-    [ "InvertedResidual", "structInvertedResidual.html", null ],
-    [ "MobileNetV2", "structMobileNetV2.html", "structMobileNetV2" ]
+    [ "Conv2dNormActivation", "classConv2dNormActivation.html", null ],
+    [ "InvertedResidual", "classInvertedResidual.html", null ],
+    [ "MobileNetV2", "classMobileNetV2.html", "classMobileNetV2" ]
 ];

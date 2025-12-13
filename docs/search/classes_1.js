@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['invertedresidual_0',['InvertedResidual',['../structInvertedResidual.html',1,'']]]
+  ['invertedresidual_0',['InvertedResidual',['../classInvertedResidual.html',1,'']]]
 ];
