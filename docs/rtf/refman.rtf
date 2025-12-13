@@ -137,12 +137,12 @@ Version \par\page\page\vertalt
 MobileNetV2 libtorch\par \pard\plain 
 {\tc\tcl1 \v MobileNetV2 libtorch}
 {\xe \v MobileNetV2 libtorch}
-{\bkmkstart AAAAAAAAAM}
-{\bkmkend AAAAAAAAAM}
-{
-\pard\plain \s17\sa60\sb30\widctlpar\qj \fs22\cgrid {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 {\bkmkstart AAAAAAAAAN}
 {\bkmkend AAAAAAAAAN}
+{
+\pard\plain \s17\sa60\sb30\widctlpar\qj \fs22\cgrid {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+{\bkmkstart AAAAAAAAAO}
+{\bkmkend AAAAAAAAAO}
 C++ version of {\b MobileNetV2} using libtorch which can import the pre-trained weights from torchvision.\par
 Importing the weights instead of using the JIT has the advantage that one can do transfer learning also on an edge device, for example, to adapt to different situations locally.\par
 This implementation follows very closely the {\f2 torchvision implementation of mobilenet v2}.\par
@@ -269,6 +269,27 @@ void {\b load_weights} (std::string pt)\par
 Loads a .pt weight file containing a dict with key/parameter pairs. }{
 }\par
 }\par}
+\pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+void {\b replaceClassifier} (torch::nn::Sequential &newClassifier)\par
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Replaces classifer with a new one. }{
+}\par
+}\par}
+\pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+void {\b setFeatureLearning} (bool doLearn)\par
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Enables/disables learning in the feature layers. }{
+}\par
+}\par}
+\pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
+torch::nn::Sequential {\b getClassifier} () const\par
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Gets the Classifier object Gets a pointer to the classifier, for example to attach an optimiser with it for transfer learning. }{
+}\par
+}\par}
 }
 \pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
 Static Public Member Functions\par
@@ -280,26 +301,6 @@ static torch::Tensor {\b preprocess} (cv::Mat img, bool resizeOnly=false)\par
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 Preprocessing of an openCV image for inference or learning. }{
-}\par
-}\par}
-}
-\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
-Public Attributes\par
-\pard\plain 
-
-{
-\pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-torch::nn::Sequential {\b classifier}\par
-{
-\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Classifier submodule. }{
-}\par
-}\par}
-\pard\plain \s120\fi-360\li360\widctlpar\jclisttab\tx360{\*\pn \pnlvlbody\ilvl0\ls1\pnrnot0\pndec }\ls1\adjustright \fs20\cgrid 
-torch::nn::Sequential {\b features}\par
-{
-\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid {\i {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Features submodule. }{
 }\par
 }\par}
 }
@@ -412,14 +413,34 @@ Parameters\par}
 Returns\par}\pard\plain \s82\li720\widctlpar\ql\adjustright \fs20\cgrid {\s17 \sa60 \sb30
 torch::Tensor The category scores for the different labels. \par
 }}}}
+{\xe \v getClassifier\:MobileNetV2}
+{\xe \v MobileNetV2\:getClassifier}
+\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
+{\b 
+torch::nn::Sequential MobileNetV2::getClassifier () const{\f2 [inline]}}}
+\par
+{\bkmkstart AAAAAAAAAF}
+{\bkmkend AAAAAAAAAF}
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
+\par
+{
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Gets the Classifier object Gets a pointer to the classifier, for example to attach an optimiser with it for transfer learning. }}\par
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+\par
+{{\s5\sb90\sa30\keepn\widctlpar\adjustright \b\f1\fs20\cgrid 
+Returns\par}\pard\plain \s82\li720\widctlpar\ql\adjustright \fs20\cgrid {\s17 \sa60 \sb30
+torch::nn::Sequential \par
+}}}}
 {\xe \v getNinputChannels4Classifier\:MobileNetV2}
 {\xe \v MobileNetV2\:getNinputChannels4Classifier}
 \pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
 {\b 
 int MobileNetV2::getNinputChannels4Classifier () const{\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAF}
-{\bkmkend AAAAAAAAAF}
+{\bkmkstart AAAAAAAAAG}
+{\bkmkend AAAAAAAAAG}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -438,8 +459,8 @@ int The number of intput channels to the classifer class "classfier". \par
 {\b 
 void MobileNetV2::load_weights (std::string  {\i pt}){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAG}
-{\bkmkend AAAAAAAAAG}
+{\bkmkstart AAAAAAAAAH}
+{\bkmkend AAAAAAAAAH}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -464,8 +485,8 @@ Parameters\par}
 {\b 
 static torch::Tensor MobileNetV2::preprocess (cv::Mat  {\i img}, bool  {\i resizeOnly} = {\f2 false}){\f2 [inline]}, {\f2 [static]}}}
 \par
-{\bkmkstart AAAAAAAAAH}
-{\bkmkend AAAAAAAAAH}
+{\bkmkstart AAAAAAAAAI}
+{\bkmkend AAAAAAAAAI}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -493,35 +514,61 @@ Parameters\par}
 Returns\par}\pard\plain \s82\li720\widctlpar\ql\adjustright \fs20\cgrid {\s17 \sa60 \sb30
 torch::Tensor The image as a tensor ready to be used for inference and learning. \par
 }}}}
-{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
-\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
-Member Data Documentation\par
-\pard\plain 
-{\xe \v classifier\:MobileNetV2}
-{\xe \v MobileNetV2\:classifier}
+{\xe \v replaceClassifier\:MobileNetV2}
+{\xe \v MobileNetV2\:replaceClassifier}
 \pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
 {\b 
-torch::nn::Sequential MobileNetV2::classifier}}
+void MobileNetV2::replaceClassifier (torch::nn::Sequential &  {\i newClassifier}){\f2 [inline]}}}
 \par
-{\bkmkstart AAAAAAAAAI}
-{\bkmkend AAAAAAAAAI}
+{\bkmkstart AAAAAAAAAJ}
+{\bkmkend AAAAAAAAAJ}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
 {
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Classifier submodule. }}\par
+Replaces classifer with a new one. }}\par
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-This can be replaced by a custom classifier for transfer learning. \par
+This is done for transfer learning where the classifier is replaced with a new one. {\par
+{\s5\sb90\sa30\keepn\widctlpar\adjustright \b\f1\fs20\cgrid 
+Parameters\par}
+\pard\plain \s81\li360\widctlpar\ql\adjustright \fs20\cgrid \trowd \trgaph108\trleft426\tblind426\trbrdrt\brdrs\brdrw10\brdrcf15 \trbrdrl\brdrs\brdrw10\brdrcf15 \trbrdrb\brdrs\brdrw10\brdrcf15 \trbrdrr\brdrs\brdrw10\brdrcf15 \trbrdrh\brdrs\brdrw10\brdrcf15 \trbrdrv\brdrs\brdrw10\brdrcf15 
+\clvertalt\clbrdrt\brdrs\brdrw10\brdrcf15 \clbrdrl\brdrs\brdrw10\brdrcf15 \clbrdrb\brdrs\brdrw10\brdrcf15 \clbrdrr \brdrs\brdrw10\brdrcf15 \cltxlrtb \cellx2187
+\clvertalt\clbrdrt\brdrs\brdrw10\brdrcf15 \clbrdrl\brdrs\brdrw10\brdrcf15 \clbrdrb\brdrs\brdrw10\brdrcf15 \clbrdrr \brdrs\brdrw10\brdrcf15 \cltxlrtb \cellx8748
+\pard \widctlpar\intbl\adjustright
+{{\i newClassifier} \cell }{The new classifier. \cell }
+{\row }
+}
 }}
+{\xe \v setFeatureLearning\:MobileNetV2}
+{\xe \v MobileNetV2\:setFeatureLearning}
+\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
+{\b 
+void MobileNetV2::setFeatureLearning (bool  {\i doLearn}){\f2 [inline]}}}
+\par
+{\bkmkstart AAAAAAAAAK}
+{\bkmkend AAAAAAAAAK}
+{
+\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
+\par
+{
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+Enables/disables learning in the feature layers. }}\par
+{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
+For transfer learning one needs to disable learning in the feature layers. \par
+}}
+{\pard\widctlpar\brdrb\brdrs\brdrw5\brsp20 \adjustright \par}
+\pard\plain \s3\sb240\sa60\keepn\widctlpar\adjustright \b\f1\cgrid 
+Member Data Documentation\par
+\pard\plain 
 {\xe \v classifierModuleName\:MobileNetV2}
 {\xe \v MobileNetV2\:classifierModuleName}
 \pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
 {\b 
 constexpr char MobileNetV2::classifierModuleName[] = "classifier"{\f2 [static]}, {\f2 [constexpr]}}}
 \par
-{\bkmkstart AAAAAAAAAJ}
-{\bkmkend AAAAAAAAAJ}
+{\bkmkstart AAAAAAAAAL}
+{\bkmkend AAAAAAAAAL}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -531,31 +578,14 @@ Name of the classifier submodule. }}\par
 {\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
 This is used for module registration and appears as part of the key in named_parametes. The name of the classifier module is needed when replacing the default classifier. \par
 }}
-{\xe \v features\:MobileNetV2}
-{\xe \v MobileNetV2\:features}
-\pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
-{\b 
-torch::nn::Sequential MobileNetV2::features}}
-\par
-{\bkmkstart AAAAAAAAAK}
-{\bkmkend AAAAAAAAAK}
-{
-\pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
-\par
-{
-{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-Features submodule. }}\par
-{\s17\sa60\sb30\widctlpar\qj \fs22\cgrid 
-This needs to be accessible for transfer learning which then will disable learning here. \par
-}}
 {\xe \v featuresModuleName\:MobileNetV2}
 {\xe \v MobileNetV2\:featuresModuleName}
 \pard\plain \s4\sb240\sa60\keepn\widctlpar\adjustright \b\f1\fs20\cgrid {
 {\b 
 constexpr char MobileNetV2::featuresModuleName[] = "features"{\f2 [static]}, {\f2 [constexpr]}}}
 \par
-{\bkmkstart AAAAAAAAAL}
-{\bkmkend AAAAAAAAAL}
+{\bkmkstart AAAAAAAAAM}
+{\bkmkend AAAAAAAAAM}
 {
 \pard\plain \s61\li360\sa60\sb30\qj\widctlpar\qj\adjustright \fs20\cgrid 
 \par
@@ -803,149 +833,164 @@ mobilenet_v2.h\par \pard\plain
 278         {\cf19 return} tensor;\par
 279     \}\par
 280 \par
-285     torch::nn::Sequential classifier;\par
-286 \par
-291     torch::nn::Sequential features;\par
-292 \par
-293 {\cf17 private}:\par
-294     {\cf20 // Helper which maps the libtorch keys to pytorch keys.}\par
-295     std::string ourkey2torchvision(std::string k){\cf17  const}\par
-296 {\cf17     }\{\par
-297         {\cf20 // called simply "conv" in the weights file}\par
-298         k = std::regex_replace(k, std::regex(InvertedResidual::className), {\cf22 "conv"});\par
-299         {\cf20 // not used at all in the weights file}\par
-300         {\cf17 const} std::string r = std::string(Conv2dNormActivation::className) + {\cf22 "\\\\."};\par
-301         k = std::regex_replace(k, std::regex(r), {\cf22 ""});\par
-302         {\cf19 return} k;\par
-303     \}\par
-304 \par
-305     {\cf20 // Makes a value divisible.}\par
-306     {\cf17 inline} {\cf18 int} make_divisible({\cf18 int} v, {\cf18 int} divisor = 8, {\cf18 int} min_value = -1){\cf17  const}\par
-307 {\cf17     }\{\par
-308         {\cf19 if} (min_value < 0)\par
-309             min_value = divisor;\par
-310         {\cf18 int} new_v = std::max(min_value, (({\cf18 int})((({\cf18 int})(v + divisor / 2)) / divisor)) * divisor);\par
-311         {\cf19 if} (new_v < (0.9 * ({\cf18 float})v))\par
-312             new_v += divisor;\par
-313         {\cf19 return} new_v;\par
-314     \}\par
-315 \par
-316     {\cf20 // Features output channels but can be scaled.}\par
-317     {\cf18 int} features_output_channels = 1280;\par
-318 \par
-319     {\cf20 // MobileNetV2 inverted residual settings:}\par
-320     {\cf20 // t, c, n, s  (expansion, output channels, repeats, stride)}\par
-321     {\cf17 const} std::vector<std::array<int, 4>> inverted_residual_setting = \{\par
-322         \{1, 16, 1, 1\},\par
-323         \{6, 24, 2, 2\},\par
-324         \{6, 32, 3, 2\},\par
-325         \{6, 64, 4, 2\},\par
-326         \{6, 96, 3, 1\},\par
-327         \{6, 160, 3, 2\},\par
-328         \{6, 320, 1, 1\},\par
-329     \};\par
-330 \par
-335     {\cf17 class }Conv2dNormActivation : {\cf17 public} torch::nn::Module\par
-336     \{\par
-337     {\cf17 public}:\par
-338         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "Conv2dNormActivation"};\par
-339 \par
-340         {\cf17 static} {\cf17 inline} torch::Tensor relu6({\cf17 const} torch::Tensor &x)\par
-341         \{\par
-342             {\cf19 return} torch::clamp(torch::relu(x), 0, 6);\par
-343         \}\par
-344 \par
-345         Conv2dNormActivation({\cf18 int} in_channels,\par
-346                              {\cf18 int} out_channels,\par
-347                              {\cf18 int} kernel_size = 3,\par
-348                              {\cf18 int} stride = 1,\par
-349                              {\cf18 int} padding = -1,\par
-350                              {\cf18 int} groups = 1)\par
-351         \{\par
-352             {\cf17 const} {\cf18 int} dilation = 1;\par
-353             conv = torch::nn::Sequential();\par
-354             {\cf19 if} (padding < 0)\par
-355             \{\par
-356                 padding = (kernel_size - 1) / 2 * dilation;\par
-357             \}\par
-358             conv->push_back(torch::nn::Conv2d(\par
-359                 torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)\par
-360                     .stride(stride)\par
-361                     .padding(padding)\par
-362                     .groups(groups)\par
-363                     .bias({\cf17 false})));\par
-364             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));\par
-365             conv->push_back(torch::nn::Functional(relu6));\par
-366             register_module(className, conv);\par
-367         \}\par
-368 \par
-369         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
-370         \{\par
-371             {\cf19 return} conv->forward(x);\par
-372         \}\par
-373 \par
-374     {\cf17 private}:\par
-375         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
-376     \};\par
-377 \par
-382     {\cf17 class }InvertedResidual : {\cf17 public} torch::nn::Module\par
-383     \{\par
-384     {\cf17 public}:\par
-385         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "InvertedResidual"};\par
-386 \par
-387         InvertedResidual({\cf18 int} inp, {\cf18 int} oup, {\cf18 int} stride, {\cf18 int} expand_ratio)\par
-388         \{\par
-389             {\cf19 if} ((stride < 1) || (stride > 2))\par
-390             \{\par
-391                 {\cf19 throw} std::invalid_argument({\cf22 "Stride needs to be 1 or 2."});\par
-392             \}\par
-393             {\cf17 const} {\cf18 int} hidden_dim = (int)round(inp * expand_ratio);\par
-394             use_res_connect = (stride == 1) && (inp == oup);\par
-395 \par
-396             conv = torch::nn::Sequential();\par
-397 \par
-398             {\cf19 if} (expand_ratio != 1)\par
-399             \{\par
-400                 conv->push_back(\par
-401                     Conv2dNormActivation(inp,\par
-402                                          hidden_dim,\par
-403                                          {\cf20 /*kernel_size*/} 1));\par
-404             \}\par
-405 \par
-406             conv->push_back(\par
-407                 Conv2dNormActivation(hidden_dim,\par
-408                                      hidden_dim,\par
-409                                      {\cf20 /*kernel_size=*/}3,\par
-410                                      {\cf20 /*stride=*/}stride,\par
-411                                      {\cf20 /*padding=*/}-1,\par
-412                                      {\cf20 /*groups=*/}hidden_dim));\par
-413 \par
-414             conv->push_back(torch::nn::Conv2d(\par
-415                 torch::nn::Conv2dOptions(hidden_dim, oup,\par
-416                                          {\cf20 /*kernel_size=*/}1)\par
-417                     .stride(1)\par
-418                     .padding(0)\par
-419                     .bias({\cf17 false})));\par
-420             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));\par
-421 \par
-422             register_module(className, conv);\par
-423         \}\par
-424 \par
-425         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
-426         \{\par
-427             {\cf19 if} (use_res_connect)\par
-428             \{\par
-429                 {\cf19 return} x + conv->forward(x);\par
-430             \}\par
-431             {\cf19 else}\par
-432             \{\par
-433                 {\cf19 return} conv->forward(x);\par
-434             \}\par
-435         \}\par
-436         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
-437         {\cf18 bool} use_res_connect;\par
-438     \};\par
-439 \};\par
+286     {\cf18 void} replaceClassifier(torch::nn::Sequential &newClassifier)\par
+287     \{\par
+288         classifier = newClassifier;\par
+289         replace_module(MobileNetV2::classifierModuleName, newClassifier);\par
+290     \}\par
+291 \par
+298     {\cf18 void} setFeatureLearning({\cf18 bool} doLearn) \{\par
+299         {\cf19 for} ({\cf17 auto} &p : features->parameters())\par
+300         p.requires_grad_(doLearn);\par
+301     \}\par
+302 \par
+310     torch::nn::Sequential getClassifier(){\cf17  const }\{\par
+311         {\cf19 return} classifier;\par
+312     \}\par
+313 \par
+314 {\cf17 private}:\par
+318     torch::nn::Sequential classifier;\par
+319 \par
+323     torch::nn::Sequential features;\par
+324 \par
+325     {\cf20 // Helper which maps the libtorch keys to pytorch keys.}\par
+326     std::string ourkey2torchvision(std::string k){\cf17  const}\par
+327 {\cf17     }\{\par
+328         {\cf20 // called simply "conv" in the weights file}\par
+329         k = std::regex_replace(k, std::regex(InvertedResidual::className), {\cf22 "conv"});\par
+330         {\cf20 // not used at all in the weights file}\par
+331         {\cf17 const} std::string r = std::string(Conv2dNormActivation::className) + {\cf22 "\\\\."};\par
+332         k = std::regex_replace(k, std::regex(r), {\cf22 ""});\par
+333         {\cf19 return} k;\par
+334     \}\par
+335 \par
+336     {\cf20 // Makes a value divisible.}\par
+337     {\cf17 inline} {\cf18 int} make_divisible({\cf18 int} v, {\cf18 int} divisor = 8, {\cf18 int} min_value = -1){\cf17  const}\par
+338 {\cf17     }\{\par
+339         {\cf19 if} (min_value < 0)\par
+340             min_value = divisor;\par
+341         {\cf18 int} new_v = std::max(min_value, (({\cf18 int})((({\cf18 int})(v + divisor / 2)) / divisor)) * divisor);\par
+342         {\cf19 if} (new_v < (0.9 * ({\cf18 float})v))\par
+343             new_v += divisor;\par
+344         {\cf19 return} new_v;\par
+345     \}\par
+346 \par
+347     {\cf20 // Features output channels but can be scaled.}\par
+348     {\cf18 int} features_output_channels = 1280;\par
+349 \par
+350     {\cf20 // MobileNetV2 inverted residual settings:}\par
+351     {\cf20 // t, c, n, s  (expansion, output channels, repeats, stride)}\par
+352     {\cf17 const} std::vector<std::array<int, 4>> inverted_residual_setting = \{\par
+353         \{1, 16, 1, 1\},\par
+354         \{6, 24, 2, 2\},\par
+355         \{6, 32, 3, 2\},\par
+356         \{6, 64, 4, 2\},\par
+357         \{6, 96, 3, 1\},\par
+358         \{6, 160, 3, 2\},\par
+359         \{6, 320, 1, 1\},\par
+360     \};\par
+361 \par
+366     {\cf17 class }Conv2dNormActivation : {\cf17 public} torch::nn::Module\par
+367     \{\par
+368     {\cf17 public}:\par
+369         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "Conv2dNormActivation"};\par
+370 \par
+371         {\cf17 static} {\cf17 inline} torch::Tensor relu6({\cf17 const} torch::Tensor &x)\par
+372         \{\par
+373             {\cf19 return} torch::clamp(torch::relu(x), 0, 6);\par
+374         \}\par
+375 \par
+376         Conv2dNormActivation({\cf18 int} in_channels,\par
+377                              {\cf18 int} out_channels,\par
+378                              {\cf18 int} kernel_size = 3,\par
+379                              {\cf18 int} stride = 1,\par
+380                              {\cf18 int} padding = -1,\par
+381                              {\cf18 int} groups = 1)\par
+382         \{\par
+383             {\cf17 const} {\cf18 int} dilation = 1;\par
+384             conv = torch::nn::Sequential();\par
+385             {\cf19 if} (padding < 0)\par
+386             \{\par
+387                 padding = (kernel_size - 1) / 2 * dilation;\par
+388             \}\par
+389             conv->push_back(torch::nn::Conv2d(\par
+390                 torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)\par
+391                     .stride(stride)\par
+392                     .padding(padding)\par
+393                     .groups(groups)\par
+394                     .bias({\cf17 false})));\par
+395             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(out_channels)));\par
+396             conv->push_back(torch::nn::Functional(relu6));\par
+397             register_module(className, conv);\par
+398         \}\par
+399 \par
+400         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
+401         \{\par
+402             {\cf19 return} conv->forward(x);\par
+403         \}\par
+404 \par
+405     {\cf17 private}:\par
+406         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
+407     \};\par
+408 \par
+413     {\cf17 class }InvertedResidual : {\cf17 public} torch::nn::Module\par
+414     \{\par
+415     {\cf17 public}:\par
+416         {\cf17 static} {\cf17 constexpr} {\cf18 char} className[] = {\cf22 "InvertedResidual"};\par
+417 \par
+418         InvertedResidual({\cf18 int} inp, {\cf18 int} oup, {\cf18 int} stride, {\cf18 int} expand_ratio)\par
+419         \{\par
+420             {\cf19 if} ((stride < 1) || (stride > 2))\par
+421             \{\par
+422                 {\cf19 throw} std::invalid_argument({\cf22 "Stride needs to be 1 or 2."});\par
+423             \}\par
+424             {\cf17 const} {\cf18 int} hidden_dim = (int)round(inp * expand_ratio);\par
+425             use_res_connect = (stride == 1) && (inp == oup);\par
+426 \par
+427             conv = torch::nn::Sequential();\par
+428 \par
+429             {\cf19 if} (expand_ratio != 1)\par
+430             \{\par
+431                 conv->push_back(\par
+432                     Conv2dNormActivation(inp,\par
+433                                          hidden_dim,\par
+434                                          {\cf20 /*kernel_size*/} 1));\par
+435             \}\par
+436 \par
+437             conv->push_back(\par
+438                 Conv2dNormActivation(hidden_dim,\par
+439                                      hidden_dim,\par
+440                                      {\cf20 /*kernel_size=*/}3,\par
+441                                      {\cf20 /*stride=*/}stride,\par
+442                                      {\cf20 /*padding=*/}-1,\par
+443                                      {\cf20 /*groups=*/}hidden_dim));\par
+444 \par
+445             conv->push_back(torch::nn::Conv2d(\par
+446                 torch::nn::Conv2dOptions(hidden_dim, oup,\par
+447                                          {\cf20 /*kernel_size=*/}1)\par
+448                     .stride(1)\par
+449                     .padding(0)\par
+450                     .bias({\cf17 false})));\par
+451             conv->push_back(torch::nn::BatchNorm2d(torch::nn::BatchNorm2dOptions(oup)));\par
+452 \par
+453             register_module(className, conv);\par
+454         \}\par
+455 \par
+456         torch::Tensor forward({\cf17 const} torch::Tensor &x)\par
+457         \{\par
+458             {\cf19 if} (use_res_connect)\par
+459             \{\par
+460                 {\cf19 return} x + conv->forward(x);\par
+461             \}\par
+462             {\cf19 else}\par
+463             \{\par
+464                 {\cf19 return} conv->forward(x);\par
+465             \}\par
+466         \}\par
+467         torch::nn::Sequential conv\{{\cf17 nullptr}\};\par
+468         {\cf18 bool} use_res_connect;\par
+469     \};\par
+470 \};\par
 }
 
 \pard\plain \sect\sbkpage

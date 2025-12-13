@@ -93,7 +93,6 @@ $(document).ready(function(){initNavTree('classMobileNetV2.html',''); initResiza
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classMobileNetV2-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">MobileNetV2 Class Reference</div></div>
@@ -143,21 +142,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize_weights</b
 <tr class="memitem:a4cdc7d76796f9b8283f2e9a0c0f88f52" id="r_a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a4cdc7d76796f9b8283f2e9a0c0f88f52">load_weights</a> (std::string pt)</td></tr>
 <tr class="memdesc:a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a .pt weight file containing a dict with key/parameter pairs.  <br /></td></tr>
 <tr class="separator:a4cdc7d76796f9b8283f2e9a0c0f88f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a39e0d197a7f0e053357a4b1ac0d5b0" id="r_a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a8a39e0d197a7f0e053357a4b1ac0d5b0">replaceClassifier</a> (torch::nn::Sequential &amp;newClassifier)</td></tr>
+<tr class="memdesc:a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces classifer with a new one.  <br /></td></tr>
+<tr class="separator:a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeea3252e38522e2aa51af329cf7d2bb8" id="r_aeea3252e38522e2aa51af329cf7d2bb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#aeea3252e38522e2aa51af329cf7d2bb8">setFeatureLearning</a> (bool doLearn)</td></tr>
+<tr class="memdesc:aeea3252e38522e2aa51af329cf7d2bb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables/disables learning in the feature layers.  <br /></td></tr>
+<tr class="separator:aeea3252e38522e2aa51af329cf7d2bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50279dc9d0194cf532aee5b1a3068029" id="r_a50279dc9d0194cf532aee5b1a3068029"><td class="memItemLeft" align="right" valign="top">torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a50279dc9d0194cf532aee5b1a3068029">getClassifier</a> () const</td></tr>
+<tr class="memdesc:a50279dc9d0194cf532aee5b1a3068029"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Classifier object Gets a pointer to the classifier, for example to attach an optimiser with it for transfer learning.  <br /></td></tr>
+<tr class="separator:a50279dc9d0194cf532aee5b1a3068029"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a95c50ff709f6eaca7069b6065f04d7e7" id="r_a95c50ff709f6eaca7069b6065f04d7e7"><td class="memItemLeft" align="right" valign="top">static torch::Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a95c50ff709f6eaca7069b6065f04d7e7">preprocess</a> (cv::Mat img, bool resizeOnly=false)</td></tr>
 <tr class="memdesc:a95c50ff709f6eaca7069b6065f04d7e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preprocessing of an openCV image for inference or learning.  <br /></td></tr>
 <tr class="separator:a95c50ff709f6eaca7069b6065f04d7e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:acc061c28d92d82f63a8536decf664339" id="r_acc061c28d92d82f63a8536decf664339"><td class="memItemLeft" align="right" valign="top">torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#acc061c28d92d82f63a8536decf664339">classifier</a></td></tr>
-<tr class="memdesc:acc061c28d92d82f63a8536decf664339"><td class="mdescLeft">&#160;</td><td class="mdescRight">Classifier submodule.  <br /></td></tr>
-<tr class="separator:acc061c28d92d82f63a8536decf664339"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e4d61d129accd1d361bb1820f07a30e" id="r_a8e4d61d129accd1d361bb1820f07a30e"><td class="memItemLeft" align="right" valign="top">torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a8e4d61d129accd1d361bb1820f07a30e">features</a></td></tr>
-<tr class="memdesc:a8e4d61d129accd1d361bb1820f07a30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Features submodule.  <br /></td></tr>
-<tr class="separator:a8e4d61d129accd1d361bb1820f07a30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -264,6 +263,34 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>torch::Tensor The category scores for the different labels. </dd></dl>
+
+</div>
+</div>
+<a id="a50279dc9d0194cf532aee5b1a3068029" name="a50279dc9d0194cf532aee5b1a3068029"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50279dc9d0194cf532aee5b1a3068029">&#9670;&#160;</a></span>getClassifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">torch::nn::Sequential MobileNetV2::getClassifier </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the Classifier object Gets a pointer to the classifier, for example to attach an optimiser with it for transfer learning. </p>
+<dl class="section return"><dt>Returns</dt><dd>torch::nn::Sequential </dd></dl>
 
 </div>
 </div>
@@ -378,24 +405,70 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="acc061c28d92d82f63a8536decf664339" name="acc061c28d92d82f63a8536decf664339"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc061c28d92d82f63a8536decf664339">&#9670;&#160;</a></span>classifier</h2>
+<a id="a8a39e0d197a7f0e053357a4b1ac0d5b0" name="a8a39e0d197a7f0e053357a4b1ac0d5b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a39e0d197a7f0e053357a4b1ac0d5b0">&#9670;&#160;</a></span>replaceClassifier()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">torch::nn::Sequential MobileNetV2::classifier</td>
+          <td class="memname">void MobileNetV2::replaceClassifier </td>
+          <td>(</td>
+          <td class="paramtype">torch::nn::Sequential &amp;&#160;</td>
+          <td class="paramname"><em>newClassifier</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Classifier submodule. </p>
-<p>This can be replaced by a custom classifier for transfer learning. </p>
+<p>Replaces classifer with a new one. </p>
+<p>This is done for transfer learning where the classifier is replaced with a new one. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newClassifier</td><td>The new classifier. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
+<a id="aeea3252e38522e2aa51af329cf7d2bb8" name="aeea3252e38522e2aa51af329cf7d2bb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeea3252e38522e2aa51af329cf7d2bb8">&#9670;&#160;</a></span>setFeatureLearning()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MobileNetV2::setFeatureLearning </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>doLearn</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enables/disables learning in the feature layers. </p>
+<p>For transfer learning one needs to disable learning in the feature layers. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
 <a id="aa45510b7d6c4b61143ef93e01daafed9" name="aa45510b7d6c4b61143ef93e01daafed9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa45510b7d6c4b61143ef93e01daafed9">&#9670;&#160;</a></span>classifierModuleName</h2>
 
@@ -418,23 +491,6 @@ Static Public Attributes</h2></td></tr>
 
 <p>Name of the classifier submodule. </p>
 <p>This is used for module registration and appears as part of the key in named_parametes. The name of the classifier module is needed when replacing the default classifier. </p>
-
-</div>
-</div>
-<a id="a8e4d61d129accd1d361bb1820f07a30e" name="a8e4d61d129accd1d361bb1820f07a30e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e4d61d129accd1d361bb1820f07a30e">&#9670;&#160;</a></span>features</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">torch::nn::Sequential MobileNetV2::features</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Features submodule. </p>
-<p>This needs to be accessible for transfer learning which then will disable learning here. </p>
 
 </div>
 </div>
