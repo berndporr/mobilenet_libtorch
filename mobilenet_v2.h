@@ -33,7 +33,7 @@ class MobileNetV2 : public torch::nn::Module
 public:
     /**
      * @brief Construct a new MobileNetV2 object.
-     * If you want to load the weights from torchvision into the classifier use the
+     * If you want to load the weight files from torchvision into this class use the
      * default values for the parameters.
      *
      * @param num_classes Number of classes.
@@ -89,15 +89,13 @@ public:
 
     /**
      * @brief Name of the features submodule.
-     * This is used for module registration and appears as part of the key in named_parametes.
+     * This appears as part of the key in named_parametes and named_buffers.
      */
     static constexpr char featuresModuleName[] = "features";
 
     /**
      * @brief Name of the classifier submodule.
-     * This is used for module registration and appears as part of the key in named_parametes.
-     * The name of the classifier module is needed when replacing
-     * the default classifier.
+     * This appears as part of the key in named_parametes and named_buffers.
      */
     static constexpr char classifierModuleName[] = "classifier";
 
@@ -108,7 +106,7 @@ public:
      *
      * @return int The number of intput channels to the classifer class "classfier".
      */
-    int getNinputChannels4Classifier() const
+    int getNinputChannelsOfClassifier() const
     {
         return features_output_channels;
     }
@@ -158,6 +156,10 @@ public:
     /**
      * @brief Loads a .pt weight file containing a dict with key/parameter pairs.
      * See https://github.com/pytorch/pytorch/issues/36577
+     * The difference between pytorch and libtorch is that pytorch just has
+     * named parameters but libtorch has both named parameters and named bufferes.
+     * This method makes sure that the key/parameters pairs are loaded into
+     * both named buffers and named parameters.
      *
      * @param pt filename of the .pt weight file.
      */
@@ -304,7 +306,8 @@ public:
 
     /**
      * @brief Gets the Classifier object.
-     * Gets a pointer to the classifier, for example to attach an optimiser with it
+     * 
+     * Gets a shared pointer to the classifier, for example to attach an optimiser with it
      * for transfer learning.
      * 
      * @return torch::nn::Sequential 
@@ -324,7 +327,28 @@ private:
      */
     torch::nn::Sequential features{nullptr};
 
+    // Features output channels but can be scaled.
+    int features_output_channels = 1280;
+
+    // MobileNetV2 inverted residual settings:
+    // t, c, n, s  (expansion, output channels, repeats, stride)
+    const std::vector<std::array<int, 4>> inverted_residual_setting = {
+        {1, 16, 1, 1},
+        {6, 24, 2, 2},
+        {6, 32, 3, 2},
+        {6, 64, 4, 2},
+        {6, 96, 3, 1},
+        {6, 160, 3, 2},
+        {6, 320, 1, 1},
+    };
+
     // Helper which maps the libtorch keys to pytorch keys.
+    // libtorch requires names for the submodules, for example:
+    // features.14.InvertedResidual.1.Conv2dNormActivation.1.weight.
+    // However, pytorch has no names for the submodules and needs to be removed:
+    // features.14.conv.1.1.weight.
+    // Also it renames "InvertedResidual" to "conv" which is just due to my
+    // choice to call it what it is and not just "conv".
     std::string ourkey2torchvision(std::string k) const
     {
         // called simply "conv" in the weights file
@@ -345,21 +369,6 @@ private:
             new_v += divisor;
         return new_v;
     }
-
-    // Features output channels but can be scaled.
-    int features_output_channels = 1280;
-
-    // MobileNetV2 inverted residual settings:
-    // t, c, n, s  (expansion, output channels, repeats, stride)
-    const std::vector<std::array<int, 4>> inverted_residual_setting = {
-        {1, 16, 1, 1},
-        {6, 24, 2, 2},
-        {6, 32, 3, 2},
-        {6, 64, 4, 2},
-        {6, 96, 3, 1},
-        {6, 160, 3, 2},
-        {6, 320, 1, 1},
-    };
 
     /**
      * @brief Module which performs Convolution, Batch Norm and Relu6.

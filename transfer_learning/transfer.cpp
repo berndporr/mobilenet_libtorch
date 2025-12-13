@@ -116,7 +116,7 @@ int main()
     // only two categories for cats and dogs.
     auto newClassifier = torch::nn::Sequential(
         torch::nn::Dropout(0.2),
-        torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
+        torch::nn::Linear(model.getNinputChannelsOfClassifier(), classes.size()));
     model.replaceClassifier(newClassifier);
 
     // Freeze the feature detectors.
