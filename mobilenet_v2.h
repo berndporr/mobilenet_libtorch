@@ -279,18 +279,49 @@ public:
     }
 
     /**
+     * @brief Replaces classifer with a new one.
+     * This is done for transfer learning where the classifier is replaced with a new one.
+     * @param newClassifier The new classifier.
+     */
+    void replaceClassifier(torch::nn::Sequential &newClassifier)
+    {
+        classifier = newClassifier;
+        replace_module(MobileNetV2::classifierModuleName, newClassifier);
+    }
+
+    /**
+     * @brief Enables/disables learning in the feature layers.
+     * 
+     * For transfer learning one needs to disable learning in the feature 
+     * layers.
+     */
+    void setFeatureLearning(bool doLearn) {
+        for (auto &p : features->parameters())
+        p.requires_grad_(doLearn);
+    }
+
+    /**
+     * @brief Gets the Classifier object
+     * Gets a pointer to the classifier, for example to attach an optimiser with it
+     * for transfer learning.
+     * 
+     * @return torch::nn::Sequential 
+     */
+    torch::nn::Sequential getClassifier() const {
+        return classifier;
+    }
+
+private:
+    /**
      * @brief Classifier submodule.
-     * This can be replaced by a custom classifier for transfer learning.
      */
     torch::nn::Sequential classifier;
 
     /**
      * @brief Features submodule.
-     * This needs to be accessible for transfer learning which then will disable learning here.
      */
     torch::nn::Sequential features;
 
-private:
     // Helper which maps the libtorch keys to pytorch keys.
     std::string ourkey2torchvision(std::string k) const
     {

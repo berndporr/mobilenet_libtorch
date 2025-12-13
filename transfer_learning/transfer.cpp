@@ -114,17 +114,16 @@ int main()
 
     // Replace the standard classifier by this custom one with
     // only two categories for cats and dogs.
-    model.classifier = torch::nn::Sequential(
+    auto newClassifier = torch::nn::Sequential(
         torch::nn::Dropout(0.2),
         torch::nn::Linear(model.getNinputChannels4Classifier(), classes.size()));
-    model.replace_module(MobileNetV2::classifierModuleName, model.classifier);
+    model.replaceClassifier(newClassifier);
 
     // Freeze the feature detectors.
-    for (auto &p : model.features->parameters())
-        p.requires_grad_(false);
+    model.setFeatureLearning(false);
 
     // Optimizer only for classifier.
-    torch::optim::Adam optimizer(model.classifier->parameters(), torch::optim::AdamOptions(1e-3));
+    torch::optim::Adam optimizer(model.getClassifier()->parameters(), torch::optim::AdamOptions(1e-3));
     torch::nn::CrossEntropyLoss criterion;
 
     // Send the model to the CPU or GPU
