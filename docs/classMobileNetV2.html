@@ -129,9 +129,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a160e21f81382ed20b6630706bdb1945c" id="r_a160e21f81382ed20b6630706bdb1945c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a160e21f81382ed20b6630706bdb1945c">MobileNetV2</a> (int num_classes=1000, float width_mult=1.0f, int round_nearest=8, float dropout=0.2)</td></tr>
 <tr class="memdesc:a160e21f81382ed20b6630706bdb1945c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object.  <br /></td></tr>
 <tr class="separator:a160e21f81382ed20b6630706bdb1945c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38e5697a203d231b82a52f6cb68b026e" id="r_a38e5697a203d231b82a52f6cb68b026e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a38e5697a203d231b82a52f6cb68b026e">getNinputChannels4Classifier</a> () const</td></tr>
-<tr class="memdesc:a38e5697a203d231b82a52f6cb68b026e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of input channels for the classfier.  <br /></td></tr>
-<tr class="separator:a38e5697a203d231b82a52f6cb68b026e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b406eeb402f4adac4a3fc34d420b22e" id="r_a0b406eeb402f4adac4a3fc34d420b22e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a0b406eeb402f4adac4a3fc34d420b22e">getNinputChannelsOfClassifier</a> () const</td></tr>
+<tr class="memdesc:a0b406eeb402f4adac4a3fc34d420b22e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of input channels for the classfier.  <br /></td></tr>
+<tr class="separator:a0b406eeb402f4adac4a3fc34d420b22e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02be1eecd34d927cf49ba1e90ead59e3" id="r_a02be1eecd34d927cf49ba1e90ead59e3"><td class="memItemLeft" align="right" valign="top">torch::Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a02be1eecd34d927cf49ba1e90ead59e3">forward</a> (torch::Tensor x)</td></tr>
 <tr class="memdesc:a02be1eecd34d927cf49ba1e90ead59e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the forward pass.  <br /></td></tr>
 <tr class="separator:a02be1eecd34d927cf49ba1e90ead59e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -217,7 +217,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object. </p>
-<p>If you want to load the weights from torchvision into the classifier use the default values for the parameters.</p>
+<p>If you want to load the weight files from torchvision into this class use the default values for the parameters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">num_classes</td><td>Number of classes. </td></tr>
@@ -290,13 +290,13 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gets the Classifier object. </p>
-<p>Gets a pointer to the classifier, for example to attach an optimiser with it for transfer learning.</p>
+<p>Gets a shared pointer to the classifier, for example to attach an optimiser with it for transfer learning.</p>
 <dl class="section return"><dt>Returns</dt><dd>torch::nn::Sequential </dd></dl>
 
 </div>
 </div>
-<a id="a38e5697a203d231b82a52f6cb68b026e" name="a38e5697a203d231b82a52f6cb68b026e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38e5697a203d231b82a52f6cb68b026e">&#9670;&#160;</a></span>getNinputChannels4Classifier()</h2>
+<a id="a0b406eeb402f4adac4a3fc34d420b22e" name="a0b406eeb402f4adac4a3fc34d420b22e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b406eeb402f4adac4a3fc34d420b22e">&#9670;&#160;</a></span>getNinputChannelsOfClassifier()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -305,7 +305,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int MobileNetV2::getNinputChannels4Classifier </td>
+          <td class="memname">int MobileNetV2::getNinputChannelsOfClassifier </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -349,7 +349,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Loads a .pt weight file containing a dict with key/parameter pairs. </p>
-<p>See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a></p>
+<p>See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a> The difference between pytorch and libtorch is that pytorch just has named parameters but libtorch has both named parameters and named bufferes. This method makes sure that the key/parameters pairs are loaded into both named buffers and named parameters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pt</td><td>filename of the .pt weight file. </td></tr>
@@ -491,7 +491,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Name of the classifier submodule. </p>
-<p>This is used for module registration and appears as part of the key in named_parametes. The name of the classifier module is needed when replacing the default classifier. </p>
+<p>This appears as part of the key in named_parametes and named_buffers. </p>
 
 </div>
 </div>
@@ -516,7 +516,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Name of the features submodule. </p>
-<p>This is used for module registration and appears as part of the key in named_parametes. </p>
+<p>This appears as part of the key in named_parametes and named_buffers. </p>
 
 </div>
 </div>
