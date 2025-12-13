@@ -315,12 +315,12 @@ private:
     /**
      * @brief Classifier submodule.
      */
-    torch::nn::Sequential classifier;
+    torch::nn::Sequential classifier{nullptr};
 
     /**
      * @brief Features submodule.
      */
-    torch::nn::Sequential features;
+    torch::nn::Sequential features{nullptr};
 
     // Helper which maps the libtorch keys to pytorch keys.
     std::string ourkey2torchvision(std::string k) const
