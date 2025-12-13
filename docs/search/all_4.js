@@ -1,5 +1,5 @@
 var searchData=
 [
   ['libtorch_0',['MobileNetV2 libtorch',['../index.html',1,'']]],
-  ['load_5fweights_1',['load_weights',['../classMobileNetV2.html#a4cdc7d76796f9b8283f2e9a0c0f88f52',1,'MobileNetV2']]]
+  ['load_5ftorchvision_5fweights_1',['load_torchvision_weights',['../classMobileNetV2.html#a0ba3e11f0b345343acb733c46853f3d7',1,'MobileNetV2']]]
 ];
