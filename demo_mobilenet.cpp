@@ -4,6 +4,10 @@
 
 const torch::Device device = torch::kCPU; // change to torch::kCUDA if available
 
+const char pretrained_weights_file[] = "mobilenet_v2.pt";
+
+const char labels_file[] = "labels.txt";
+
 // loads the labels into a vector
 const std::vector<std::string> loadLabels(const std::string filename)
 {
@@ -49,12 +53,12 @@ int main(int argc, char *argv[])
     }
 
     // getting the text labels
-    const auto labels = loadLabels("labels.txt");
+    const auto labels = loadLabels(labels_file);
 
     // create an instance of MobilenetV2
     MobileNetV2 model;
     // load the pre-trained weights
-    model.load_weights("mobilenet_v2.pt");
+    model.load_weights(pretrained_weights_file);
     // upload it all to the device (CPU or GPU)
     model.to(device);
     // switch to pure inference so no training

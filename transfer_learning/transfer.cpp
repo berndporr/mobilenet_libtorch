@@ -14,6 +14,12 @@ namespace fs = std::filesystem;
 // Path of the Kaggle dataset
 const fs::path datasetpath = ".cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
 
+// Path to the pretrained weights file
+const char pretrained_weights_file[] = "../mobilenet_v2.pt";
+
+// Path to the loss log file
+const char loss_file[] = "loss.dat";
+
 // Subdirs of the two classes
 const std::vector<fs::path> classes = {"Cat", "Dog"};
 
@@ -104,7 +110,7 @@ int main()
     MobileNetV2 model;
 
     // Load the pre-trained weights.
-    model.load_weights("../mobilenet_v2.pt");
+    model.load_weights(pretrained_weights_file);
 
     // Replace the standard classifier by this custom one with
     // only two categories for cats and dogs.
@@ -126,7 +132,7 @@ int main()
 
     // Logging of the loss
     std::fstream floss;
-    floss.open("loss.dat", std::fstream::out);
+    floss.open(loss_file, std::fstream::out);
 
     // Training loop
     for (int epoch = 1; epoch <= epochs; epoch++)
