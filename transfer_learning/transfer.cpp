@@ -120,7 +120,7 @@ int main()
     model.replaceClassifier(newClassifier);
 
     // Freeze the feature detectors.
-    model.setFeatureLearning(false);
+    model.setFeaturesLearning(false);
 
     // Optimizer only for classifier.
     torch::optim::Adam optimizer(model.getClassifier()->parameters(), torch::optim::AdamOptions(1e-3));

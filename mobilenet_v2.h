@@ -100,18 +100,6 @@ public:
     static constexpr char classifierModuleName[] = "classifier";
 
     /**
-     * @brief Gets the number of input channels for the classfier.
-     * This will make it easy to replace the classifier with anything the user wants
-     * by creating their own torch::nn::Sequential() for the classifier.
-     *
-     * @return int The number of intput channels to the classifer class "classfier".
-     */
-    int getNinputChannelsOfClassifier() const
-    {
-        return features_output_channels;
-    }
-
-    /**
      * @brief Performs the forward pass.
      *
      * @param x The batch of input images.
@@ -157,7 +145,7 @@ public:
      * @brief Loads a .pt weight file containing a dict with key/parameter pairs.
      * See https://github.com/pytorch/pytorch/issues/36577
      * The difference between pytorch and libtorch is that pytorch just has
-     * named parameters but libtorch has both named parameters and named bufferes.
+     * named parameters but libtorch has both named parameters and named buffers.
      * This method makes sure that the key/parameters pairs are loaded into
      * both named buffers and named parameters.
      *
@@ -282,7 +270,19 @@ public:
     }
 
     /**
-     * @brief Replaces classifer with a new one.
+     * @brief Gets the number of input channels of the classifier.
+     * This will make it easy to replace the classifier with anything the user wants
+     * by creating their own torch::nn::Sequential() for the classifier.
+     *
+     * @return int The number of intput channels of classifier class "classfier".
+     */
+    int getNinputChannelsOfClassifier() const
+    {
+        return features_output_channels;
+    }
+
+    /**
+     * @brief Replaces classifier with a new one.
      *
      * For transfer learning the default classifier is replaced with a new one.
      * @param newClassifier The new classifier.
@@ -296,10 +296,10 @@ public:
     /**
      * @brief Enables/disables learning in the feature layers.
      *
-     * For transfer learning one needs to disable learning in the feature
-     * layers.
+     * For transfer learning one needs to disable learning in the features
+     * submodule.
      */
-    void setFeatureLearning(bool doLearn)
+    void setFeaturesLearning(bool doLearn)
     {
         for (auto &p : features->parameters())
             p.requires_grad_(doLearn);
