@@ -129,9 +129,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a160e21f81382ed20b6630706bdb1945c" id="r_a160e21f81382ed20b6630706bdb1945c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a160e21f81382ed20b6630706bdb1945c">MobileNetV2</a> (int num_classes=1000, float width_mult=1.0f, int round_nearest=8, float dropout=0.2)</td></tr>
 <tr class="memdesc:a160e21f81382ed20b6630706bdb1945c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classMobileNetV2.html" title="Implementation of MobileNetV2 as done in py-torchvision See: // https://github.com/pytorch/vision/blo...">MobileNetV2</a> object.  <br /></td></tr>
 <tr class="separator:a160e21f81382ed20b6630706bdb1945c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b406eeb402f4adac4a3fc34d420b22e" id="r_a0b406eeb402f4adac4a3fc34d420b22e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a0b406eeb402f4adac4a3fc34d420b22e">getNinputChannelsOfClassifier</a> () const</td></tr>
-<tr class="memdesc:a0b406eeb402f4adac4a3fc34d420b22e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of input channels for the classfier.  <br /></td></tr>
-<tr class="separator:a0b406eeb402f4adac4a3fc34d420b22e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02be1eecd34d927cf49ba1e90ead59e3" id="r_a02be1eecd34d927cf49ba1e90ead59e3"><td class="memItemLeft" align="right" valign="top">torch::Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a02be1eecd34d927cf49ba1e90ead59e3">forward</a> (torch::Tensor x)</td></tr>
 <tr class="memdesc:a02be1eecd34d927cf49ba1e90ead59e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the forward pass.  <br /></td></tr>
 <tr class="separator:a02be1eecd34d927cf49ba1e90ead59e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,12 +139,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize_weights</b
 <tr class="memitem:a0ba3e11f0b345343acb733c46853f3d7" id="r_a0ba3e11f0b345343acb733c46853f3d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a0ba3e11f0b345343acb733c46853f3d7">load_torchvision_weights</a> (std::string pt)</td></tr>
 <tr class="memdesc:a0ba3e11f0b345343acb733c46853f3d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a .pt weight file containing a dict with key/parameter pairs.  <br /></td></tr>
 <tr class="separator:a0ba3e11f0b345343acb733c46853f3d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b406eeb402f4adac4a3fc34d420b22e" id="r_a0b406eeb402f4adac4a3fc34d420b22e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a0b406eeb402f4adac4a3fc34d420b22e">getNinputChannelsOfClassifier</a> () const</td></tr>
+<tr class="memdesc:a0b406eeb402f4adac4a3fc34d420b22e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of input channels of the classifier.  <br /></td></tr>
+<tr class="separator:a0b406eeb402f4adac4a3fc34d420b22e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a39e0d197a7f0e053357a4b1ac0d5b0" id="r_a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a8a39e0d197a7f0e053357a4b1ac0d5b0">replaceClassifier</a> (torch::nn::Sequential &amp;newClassifier)</td></tr>
-<tr class="memdesc:a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces classifer with a new one.  <br /></td></tr>
+<tr class="memdesc:a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces classifier with a new one.  <br /></td></tr>
 <tr class="separator:a8a39e0d197a7f0e053357a4b1ac0d5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeea3252e38522e2aa51af329cf7d2bb8" id="r_aeea3252e38522e2aa51af329cf7d2bb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#aeea3252e38522e2aa51af329cf7d2bb8">setFeatureLearning</a> (bool doLearn)</td></tr>
-<tr class="memdesc:aeea3252e38522e2aa51af329cf7d2bb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables/disables learning in the feature layers.  <br /></td></tr>
-<tr class="separator:aeea3252e38522e2aa51af329cf7d2bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42c51c385ce560a5523b0f4b25057144" id="r_a42c51c385ce560a5523b0f4b25057144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a42c51c385ce560a5523b0f4b25057144">setFeaturesLearning</a> (bool doLearn)</td></tr>
+<tr class="memdesc:a42c51c385ce560a5523b0f4b25057144"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables/disables learning in the feature layers.  <br /></td></tr>
+<tr class="separator:a42c51c385ce560a5523b0f4b25057144"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50279dc9d0194cf532aee5b1a3068029" id="r_a50279dc9d0194cf532aee5b1a3068029"><td class="memItemLeft" align="right" valign="top">torch::nn::Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMobileNetV2.html#a50279dc9d0194cf532aee5b1a3068029">getClassifier</a> () const</td></tr>
 <tr class="memdesc:a50279dc9d0194cf532aee5b1a3068029"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Classifier object.  <br /></td></tr>
 <tr class="separator:a50279dc9d0194cf532aee5b1a3068029"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -318,9 +318,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the number of input channels for the classfier. </p>
+<p>Gets the number of input channels of the classifier. </p>
 <p>This will make it easy to replace the classifier with anything the user wants by creating their own torch::nn::Sequential() for the classifier.</p>
-<dl class="section return"><dt>Returns</dt><dd>int The number of intput channels to the classifer class "classfier". </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int The number of intput channels of classifier class "classfier". </dd></dl>
 
 </div>
 </div>
@@ -349,7 +349,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Loads a .pt weight file containing a dict with key/parameter pairs. </p>
-<p>See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a> The difference between pytorch and libtorch is that pytorch just has named parameters but libtorch has both named parameters and named bufferes. This method makes sure that the key/parameters pairs are loaded into both named buffers and named parameters.</p>
+<p>See <a href="https://github.com/pytorch/pytorch/issues/36577">https://github.com/pytorch/pytorch/issues/36577</a> The difference between pytorch and libtorch is that pytorch just has named parameters but libtorch has both named parameters and named buffers. This method makes sure that the key/parameters pairs are loaded into both named buffers and named parameters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pt</td><td>filename of the .pt weight file. </td></tr>
@@ -430,7 +430,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Replaces classifer with a new one. </p>
+<p>Replaces classifier with a new one. </p>
 <p>For transfer learning the default classifier is replaced with a new one. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">newClassifier</td><td>The new classifier. </td></tr>
@@ -440,8 +440,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aeea3252e38522e2aa51af329cf7d2bb8" name="aeea3252e38522e2aa51af329cf7d2bb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeea3252e38522e2aa51af329cf7d2bb8">&#9670;&#160;</a></span>setFeatureLearning()</h2>
+<a id="a42c51c385ce560a5523b0f4b25057144" name="a42c51c385ce560a5523b0f4b25057144"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42c51c385ce560a5523b0f4b25057144">&#9670;&#160;</a></span>setFeaturesLearning()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -450,7 +450,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void MobileNetV2::setFeatureLearning </td>
+          <td class="memname">void MobileNetV2::setFeaturesLearning </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>doLearn</em></td><td>)</td>
@@ -465,7 +465,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Enables/disables learning in the feature layers. </p>
-<p>For transfer learning one needs to disable learning in the feature layers. </p>
+<p>For transfer learning one needs to disable learning in the features submodule. </p>
 
 </div>
 </div>

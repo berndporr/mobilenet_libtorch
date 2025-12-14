@@ -7,5 +7,5 @@ var classMobileNetV2 =
     [ "initialize_weights", "classMobileNetV2.html#a5bbe3c9b0bd4bc1c572fbafcfccd69f2", null ],
     [ "load_torchvision_weights", "classMobileNetV2.html#a0ba3e11f0b345343acb733c46853f3d7", null ],
     [ "replaceClassifier", "classMobileNetV2.html#a8a39e0d197a7f0e053357a4b1ac0d5b0", null ],
-    [ "setFeatureLearning", "classMobileNetV2.html#aeea3252e38522e2aa51af329cf7d2bb8", null ]
+    [ "setFeaturesLearning", "classMobileNetV2.html#a42c51c385ce560a5523b0f4b25057144", null ]
 ];

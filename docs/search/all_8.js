@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['setfeaturelearning_0',['setFeatureLearning',['../classMobileNetV2.html#aeea3252e38522e2aa51af329cf7d2bb8',1,'MobileNetV2']]]
+  ['setfeatureslearning_0',['setFeaturesLearning',['../classMobileNetV2.html#a42c51c385ce560a5523b0f4b25057144',1,'MobileNetV2']]]
 ];
