@@ -284,7 +284,7 @@ public:
     /**
      * @brief Replaces classifer with a new one.
      *
-     * This is done for transfer learning where the classifier is replaced with a new one.
+     * For transfer learning the default classifier is replaced with a new one.
      * @param newClassifier The new classifier.
      */
     void replaceClassifier(torch::nn::Sequential &newClassifier)
@@ -295,24 +295,26 @@ public:
 
     /**
      * @brief Enables/disables learning in the feature layers.
-     * 
-     * For transfer learning one needs to disable learning in the feature 
+     *
+     * For transfer learning one needs to disable learning in the feature
      * layers.
      */
-    void setFeatureLearning(bool doLearn) {
+    void setFeatureLearning(bool doLearn)
+    {
         for (auto &p : features->parameters())
-        p.requires_grad_(doLearn);
+            p.requires_grad_(doLearn);
     }
 
     /**
      * @brief Gets the Classifier object.
-     * 
-     * Gets a shared pointer to the classifier, for example to attach an optimiser with it
+     *
+     * Gets a shared pointer to the classifier, for example, to attach an optimiser
      * for transfer learning.
-     * 
-     * @return torch::nn::Sequential 
+     *
+     * @return torch::nn::Sequential
      */
-    torch::nn::Sequential getClassifier() const {
+    torch::nn::Sequential getClassifier() const
+    {
         return classifier;
     }
 
