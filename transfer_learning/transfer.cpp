@@ -46,8 +46,8 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
     {
         for (size_t label = 0; label < classes.size(); label++)
         {
-            fs::path class_path = root / classes[label];
-            for (auto &p : fs::directory_iterator(class_path))
+            const fs::path class_path = root / classes[label];
+            for (const auto &p : fs::directory_iterator(class_path))
             {
                 if (p.is_regular_file())
                 {
@@ -61,13 +61,13 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
     torch::data::Example<> get(size_t idx) override
     {
         const auto &sample = samples[idx];
-        cv::Mat img = cv::imread(sample.image_path.string());
+        const cv::Mat img = cv::imread(sample.image_path.string());
         if (img.empty())
         {
             throw std::runtime_error("Failed to load image: " + sample.image_path.string());
         }
-        torch::Tensor data = MobileNetV2::preprocess(img);
-        torch::Tensor label = torch::tensor(sample.label, torch::kLong);
+        const torch::Tensor data = MobileNetV2::preprocess(img);
+        const torch::Tensor label = torch::tensor(sample.label, torch::kLong);
         return {data, label};
     }
 
