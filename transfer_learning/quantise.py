@@ -33,68 +33,8 @@ warnings.filterwarnings(
 # Specify random seed for repeatable results
 _ = torch.manual_seed(191009)
 
-class AverageMeter(object):
-    """Computes and stores the average and current value"""
-    def __init__(self, name, fmt=':f'):
-        self.name = name
-        self.fmt = fmt
-        self.reset()
-
-    def reset(self):
-        self.val = 0
-        self.avg = 0
-        self.sum = 0
-        self.count = 0
-
-    def update(self, val, n=1):
-        self.val = val
-        self.sum += val * n
-        self.count += n
-        self.avg = self.sum / self.count
-
-    def __str__(self):
-        fmtstr = '{name} {val' + self.fmt + '} ({avg' + self.fmt + '})'
-        return fmtstr.format(**self.__dict__)
-
-
-def accuracy(output, target, topk=(1,)):
-    """
-    Computes the accuracy over the k top predictions for the specified
-    values of k.
-    """
-    with torch.no_grad():
-        maxk = max(topk)
-        batch_size = target.size(0)
-
-        _, pred = output.topk(maxk, 1, True, True)
-        pred = pred.t()
-        correct = pred.eq(target.view(1, -1).expand_as(pred))
-
-        res = []
-        for k in topk:
-            correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
-            res.append(correct_k.mul_(100.0 / batch_size))
-        return res
-
-
-def evaluate(model, criterion, data_loader):
-    top1 = AverageMeter('Acc@1', ':6.2f')
-    top5 = AverageMeter('Acc@5', ':6.2f')
-    cnt = 0
-    with torch.no_grad():
-        for image, target in data_loader:
-            output = model(image)
-            loss = criterion(output, target)
-            cnt += 1
-            acc1, acc5 = accuracy(output, target, topk=(1, 5))
-            top1.update(acc1[0], image.size(0))
-            top5.update(acc5[0], image.size(0))
-    print('')
-
-    return top1, top5
-
 def load_model():
-    model = models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT)
+    model = models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT).features
     model.to("cpu")
     return model
 
@@ -175,26 +115,18 @@ calibrate(prepared_model, data_loader_test)  # run calibration on sample data
 quantized_model = convert_pt2e(prepared_model)
 print(quantized_model)
 
-
-
-# Baseline model size and accuracy
+# Baseline model size
 print("Size of baseline model")
 print_size_of_model(float_model)
 
-top1, top5 = evaluate(float_model, criterion, data_loader_test)
-print("Baseline Float Model Evaluation accuracy: %2.2f, %2.2f"%(top1.avg, top5.avg))
-
-# Quantized model size and accuracy
+# Quantized model size
 print("Size of model after quantization")
 # export again to remove unused weights
 quantized_model = torch.export.export(quantized_model, example_inputs).module()
 print_size_of_model(quantized_model)
 
-top1, top5 = evaluate(quantized_model, criterion, data_loader_test)
-print("[before serilaization] Evaluation accuracy on test dataset: %2.2f, %2.2f"%(top1.avg, top5.avg))
-
 # 1. Export the model and Save ExportedProgram
-pt2e_quantized_model_file_path = "mobilenetv2_pt2e_quantized.pth"
+pt2e_quantized_model_file_path = "mobilenetv2_features_pt2e_quantized.pt2"
 # capture the model to get an ExportedProgram
 quantized_ep = torch.export.export(quantized_model, example_inputs)
 # use torch.export.save to save an ExportedProgram
