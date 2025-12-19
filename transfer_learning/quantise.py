@@ -131,3 +131,8 @@ pt2e_quantized_model_file_path = "mobilenetv2_features_pt2e_quantized.pt2"
 quantized_ep = torch.export.export(quantized_model, example_inputs)
 # use torch.export.save to save an ExportedProgram
 torch.export.save(quantized_ep, pt2e_quantized_model_file_path)
+
+output_path = torch._inductor.aoti_compile_and_package(
+        quantized_ep,
+        package_path=os.path.join(os.getcwd(), "model.pt2"),
+    )
