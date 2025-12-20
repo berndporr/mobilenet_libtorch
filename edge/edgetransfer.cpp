@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <filesystem>
-#include "mobilenet_v2.h"
+#include "../mobilenet_v2.h"
 #include <iostream>
 #include <unistd.h>
 #include <pwd.h>
@@ -111,6 +111,7 @@ int main()
 
     // Load the pre-trained weights.
     model.load_torchvision_weights(pretrained_weights_file);
+    model.loadQuantisedFeatureDetectors("model.pt2");
 
     // Replace the standard classifier by this custom one with
     // only two categories for cats and dogs.
