@@ -110,10 +110,16 @@ public:
      */
     torch::Tensor forward(torch::Tensor x)
     {
-        // x = features->forward(x);
-        std::vector<torch::Tensor> inputs = x.unbind(0);
-        std::vector<torch::Tensor> outputs = loader->run(inputs);
-        x = torch::stack(outputs, 0);
+        if (nullptr == loader)
+        {
+            x = features->forward(x);
+        }
+        else
+        {
+            const std::vector<torch::Tensor> inputs{x};
+            const std::vector<torch::Tensor> outputs = loader->run(inputs);
+            x = outputs[0];
+        }
         const torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions({1, 1});
         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);
         x = torch::flatten(x, 1);
