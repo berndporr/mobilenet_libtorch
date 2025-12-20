@@ -97,15 +97,12 @@ model_to_quantize = load_model().to("cpu")
 model_to_quantize.eval()
 
 example_inputs = (torch.rand(32, 3, 224, 224),)
+batch_dim = torch.export.Dim("batch", min=1, max=1024)
+dynamic_shapes={"input": {0: batch_dim}}
+
 exported_model = torch.export.export(model_to_quantize, example_inputs).module()
 
-dynamic_shapes = tuple(
-  {0: torch.export.Dim("dim", min=1, max=1024)} if i == 0 else None
-  for i in range(len(example_inputs))
-)
-
-print("Dynshapes:",dynamic_shapes)
-
+batch_dim = torch.export.Dim("batch", min=1, max=1024)
 exported_model = torch.export.export(model_to_quantize, example_inputs, dynamic_shapes=dynamic_shapes).module()
 
 quantizer = XNNPACKQuantizer()
@@ -125,11 +122,11 @@ print_size_of_model(float_model)
 # Quantized model size
 print("Size of model after quantization")
 # export again to remove unused weights
-quantized_model = torch.export.export(quantized_model, example_inputs).module()
+quantized_model = torch.export.export(quantized_model, example_inputs, dynamic_shapes=dynamic_shapes).module()
 print_size_of_model(quantized_model)
 
 # capture the model to get an ExportedProgram
-quantized_ep = torch.export.export(quantized_model, example_inputs)
+quantized_ep = torch.export.export(quantized_model, example_inputs, dynamic_shapes=dynamic_shapes)
 
 output_path = torch._inductor.aoti_compile_and_package(
         quantized_ep,
