@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <filesystem>
-#include "../mobilenet_v2.h"
+#include "mobilenet_v2.h"
 #include <iostream>
 #include <unistd.h>
 #include <pwd.h>

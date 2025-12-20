@@ -96,13 +96,16 @@ model_to_quantize = load_model().to("cpu")
 
 model_to_quantize.eval()
 
-example_inputs = (torch.rand(2, 3, 224, 224),)
+example_inputs = (torch.rand(32, 3, 224, 224),)
 exported_model = torch.export.export(model_to_quantize, example_inputs).module()
 
 dynamic_shapes = tuple(
-  {0: torch.export.Dim("dim")} if i == 0 else None
+  {0: torch.export.Dim("dim", min=1, max=1024)} if i == 0 else None
   for i in range(len(example_inputs))
 )
+
+print("Dynshapes:",dynamic_shapes)
+
 exported_model = torch.export.export(model_to_quantize, example_inputs, dynamic_shapes=dynamic_shapes).module()
 
 quantizer = XNNPACKQuantizer()
@@ -125,12 +128,8 @@ print("Size of model after quantization")
 quantized_model = torch.export.export(quantized_model, example_inputs).module()
 print_size_of_model(quantized_model)
 
-# 1. Export the model and Save ExportedProgram
-pt2e_quantized_model_file_path = "mobilenetv2_features_pt2e_quantized.pt2"
 # capture the model to get an ExportedProgram
 quantized_ep = torch.export.export(quantized_model, example_inputs)
-# use torch.export.save to save an ExportedProgram
-torch.export.save(quantized_ep, pt2e_quantized_model_file_path)
 
 output_path = torch._inductor.aoti_compile_and_package(
         quantized_ep,

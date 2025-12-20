@@ -10,6 +10,7 @@
 #include <iostream>
 #include <system_error>
 #include <opencv2/opencv.hpp>
+#include <torch/csrc/inductor/aoti_package/model_package_loader.h>
 
 /***
  * MobileNetV2 C++ Implementation (LibTorch).
@@ -46,6 +47,8 @@ public:
         int input_channels = 32;
         input_channels = make_divisible(input_channels * width_mult, round_nearest);
         features_output_channels = make_divisible(features_output_channels * std::max(1.0f, width_mult), round_nearest);
+
+        loader = std::make_shared<torch::inductor::AOTIModelPackageLoader>("model.pt2");
 
         features = torch::nn::Sequential();
 
@@ -107,7 +110,10 @@ public:
      */
     torch::Tensor forward(torch::Tensor x)
     {
-        x = features->forward(x);
+        // x = features->forward(x);
+        std::vector<torch::Tensor> inputs = x.unbind(0);
+        std::vector<torch::Tensor> outputs = loader->run(inputs);
+        x = torch::stack(outputs, 0);
         const torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions({1, 1});
         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);
         x = torch::flatten(x, 1);
@@ -480,4 +486,6 @@ private:
         torch::nn::Sequential conv{nullptr};
         bool use_res_connect;
     };
+
+    std::shared_ptr<torch::inductor::AOTIModelPackageLoader> loader;
 };
