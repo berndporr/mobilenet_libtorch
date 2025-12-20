@@ -8,10 +8,6 @@ The feature detector is replaced by a quantised classifier which is pre-compiled
 
 Learns to distinguish between cats and dogs.
 
-![alt tag](cat.jpg)
-![alt tag](dog.jpg)
-
-
 ## Load the dataset from Kaggle
 
 ```
