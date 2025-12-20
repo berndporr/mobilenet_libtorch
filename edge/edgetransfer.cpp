@@ -17,6 +17,8 @@ const fs::path datasetpath = ".cache/kagglehub/datasets/abdalnassir/the-animalis
 // Path to the pretrained weights file
 const char pretrained_weights_file[] = "../mobilenet_v2.pt";
 
+const char quantised_model_path[] = "mobilenet_features_quant.pt2";
+
 // Path to the loss log file
 const char loss_file[] = "loss.dat";
 
@@ -27,7 +29,7 @@ const std::vector<fs::path> classes = {"Cat", "Dog"};
 const int batch_size = 32;
 
 // The number of epochs
-const int epochs = 50;
+const int epochs = 5;
 
 // -------------------------
 // Dataset implementation
@@ -84,17 +86,49 @@ void progress(int epoch, int epochs, double loss)
               << loss << "\r" << std::flush;
 }
 
+int inference(MobileNetV2 &model, cv::Mat &img)
+{
+    // scale and crop the image.
+    torch::Tensor input = model.preprocess(img);
+
+    // uploads the image to the device (CPU or GPU)
+    torch::Device device(torch::kCPU);
+    input = input.to(device);
+
+    // turn the image into a batch containing one image
+    input = input.unsqueeze(0);
+
+    // do the inference
+    torch::Tensor output = model.forward(input);
+
+    // getting rid of the batch and obtaining an array of label scores
+    output = output.squeeze();
+
+    // finding the label with the highest score and return its index
+    return output.argmax(0).item<int>();
+}
+
 // -------------------------
 // Main training program
 // -------------------------
-int main()
+int main(int argc, char *argv[])
 {
     torch::manual_seed(42);
     torch::Device device(torch::kCPU);
-    if (torch::cuda::is_available())
+
+    cv::Mat img;
+    if (argc == 2)
     {
-        const torch::DeviceType device_type = torch::kCUDA;
-        device = torch::Device(device_type);
+        img = cv::imread(argv[1]);
+        if (img.empty()) {
+            std::cerr << std::string(argv[1]) << " couldn't be loaded" << std::endl;
+            return -1;
+        }
+    }
+    else
+    {
+        fprintf(stderr, "Usage: %s image\n", argv[0]);
+        return -1;
     }
 
     const fs::path homedir(getpwuid(getuid())->pw_dir);
@@ -111,7 +145,7 @@ int main()
 
     // Load the pre-trained weights.
     model.load_torchvision_weights(pretrained_weights_file);
-    model.loadQuantisedFeatureDetectors("model.pt2");
+    model.loadQuantisedFeatureDetectors(quantised_model_path);
 
     // Replace the standard classifier by this custom one with
     // only two categories for cats and dogs.
@@ -161,5 +195,19 @@ int main()
                   << std::flush;
     }
     std::cout << "Done.\n";
+
+    std::cout << "Benchmarking:" << std::endl;
+    auto start = std::chrono::high_resolution_clock::now();
+    const int n = 100;
+    for (int i = 0; i < n; i++)
+    {
+        inference(model, img);
+    }
+    printf("\n");
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    printf("Time taken: %ld miliseconds for %d steps which gives a framerate of %f Hz.\n",
+           duration.count(), n, n * 1000 / (float)duration.count());
+
     return 0;
 }

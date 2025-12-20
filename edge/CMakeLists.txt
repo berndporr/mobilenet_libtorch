@@ -19,10 +19,10 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 include(GNUInstallDirs)
 
 add_custom_command(
-    OUTPUT model.pt2
+    OUTPUT mobilenet_features_quant.pt2
     COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/quantise.py
     DEPENDS quantise.py
 )
 
-add_executable (edgetransfer edgetransfer.cpp model.pt2)
+add_executable (edgetransfer edgetransfer.cpp mobilenet_features_quant.pt2)
 target_link_libraries(edgetransfer ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES})

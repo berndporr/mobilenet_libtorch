@@ -17,6 +17,7 @@ from executorch.exir import to_edge_transform_and_lower
 from torchao.quantization.pt2e.quantize_pt2e import convert_pt2e, prepare_pt2e
 train_batch_size = 30
 eval_batch_size = 50
+pt2_filename = "mobilenet_features_quant.pt2"
 
 # Set up warnings
 import warnings
@@ -130,5 +131,5 @@ quantized_ep = torch.export.export(quantized_model, example_inputs, dynamic_shap
 
 output_path = torch._inductor.aoti_compile_and_package(
         quantized_ep,
-        package_path=os.path.join(os.getcwd(), "model.pt2"),
+        package_path=os.path.join(os.getcwd(), pt2_filename),
     )
