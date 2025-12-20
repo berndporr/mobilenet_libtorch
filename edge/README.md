@@ -19,6 +19,19 @@ pip install kagglehub
 python get_cats_dogs.py
 ```
 
+## Add additional packages for quantisation
+Intel / Desktop:
+```
+pip install executorch
+```
+
+Raspberry PI:
+```
+git clone https://github.com/pytorch/executorch
+cd executorch
+./install_executorch.sh
+```
+
 ## Run the training
 
 ```
