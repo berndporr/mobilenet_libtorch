@@ -27,7 +27,6 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 include(GNUInstallDirs)
 
 add_subdirectory(transfer_learning)
-add_subdirectory(edge)
 
 add_executable (demo_mobilenet demo_mobilenet.cpp)
 target_link_libraries(demo_mobilenet ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES})

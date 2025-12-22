@@ -10,7 +10,6 @@
 #include <iostream>
 #include <system_error>
 #include <opencv2/opencv.hpp>
-#include <torch/csrc/inductor/aoti_package/model_package_loader.h>
 
 /***
  * MobileNetV2 C++ Implementation (LibTorch).
@@ -108,16 +107,7 @@ public:
      */
     torch::Tensor forward(torch::Tensor x)
     {
-        if (nullptr == loader)
-        {
-            x = features->forward(x);
-        }
-        else
-        {
-            const std::vector<torch::Tensor> inputs{x};
-            const std::vector<torch::Tensor> outputs = loader->run(inputs);
-            x = outputs[0];
-        }
+        x = features->forward(x);
         const torch::nn::functional::AdaptiveAvgPool2dFuncOptions &ar = torch::nn::functional::AdaptiveAvgPool2dFuncOptions({1, 1});
         x = torch::nn::functional::adaptive_avg_pool2d(x, ar);
         x = torch::flatten(x, 1);
@@ -148,26 +138,6 @@ public:
                 torch::nn::init::normal_(M->weight, 0.0, 0.01);
                 torch::nn::init::zeros_(M->bias);
             }
-        }
-    }
-
-    /**
-     * @brief Loads the pre-compiled quanitised model and uses it.
-     * Loads the quanitised and pre-compiled model and uses this for both inference
-     * and training. This speeds it up as the pre-compiled model is using integer
-     * arithmetic.
-     * 
-     * @param path The path to the pt2 file which conttains the metadata of the model.
-     */
-    void loadQuantisedFeatureDetectors(std::string path = "")
-    {
-        if (!path.empty())
-        {
-            if (debugOutput) std::cerr << "Loading quantised model" << std::endl;
-            loader = std::make_shared<torch::inductor::AOTIModelPackageLoader>(path);
-        } 
-        else{
-            loader.reset();
         }
     }
 
@@ -510,6 +480,4 @@ private:
         torch::nn::Sequential conv{nullptr};
         bool use_res_connect;
     };
-
-    std::shared_ptr<torch::inductor::AOTIModelPackageLoader> loader;
 };
