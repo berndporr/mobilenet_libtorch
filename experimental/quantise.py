@@ -17,7 +17,7 @@ from executorch.exir import to_edge_transform_and_lower
 from torchao.quantization.pt2e.quantize_pt2e import convert_pt2e, prepare_pt2e
 train_batch_size = 30
 eval_batch_size = 50
-pt2_filename = "mobilenet_features_quant.pt2"
+pte_filename = "mobilenet_features_quant.pte"
 
 # Set up warnings
 import warnings
@@ -142,5 +142,6 @@ with open("model.pte", "wb") as f:
 # Test locally via ExecuTorch runtime's pybind API (optional)
 from executorch.runtime import Runtime
 runtime = Runtime.get()
-method = runtime.load_program("model.pte").load_method("forward")
+method = runtime.load_program(pte_filename).load_method("forward")
 outputs = method.execute([torch.randn(1, 3, 224, 224)])
+print(outputs)
