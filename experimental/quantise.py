@@ -15,8 +15,8 @@ from executorch.backends.xnnpack.quantizer.xnnpack_quantizer import XNNPACKQuant
 from executorch.backends.xnnpack.partition.xnnpack_partitioner import XnnpackPartitioner
 from executorch.exir import to_edge_transform_and_lower
 from torchao.quantization.pt2e.quantize_pt2e import convert_pt2e, prepare_pt2e
-train_batch_size = 30
-eval_batch_size = 50
+train_batch_size = 32
+eval_batch_size = 32
 pte_filename = "mobilenet_features_quant.pte"
 
 # Set up warnings
@@ -97,22 +97,14 @@ model_to_quantize = load_model().to("cpu")
 
 model_to_quantize.eval()
 
-example_inputs = (torch.rand(32, 3, 224, 224),)
-batch_dim = torch.export.Dim("batch", min=1, max=1024)
+example_inputs = (torch.rand(train_batch_size, 3, 224, 224),)
+batch_dim = torch.export.Dim("batch", min=1, max=train_batch_size)
 dynamic_shapes={"input": {0: batch_dim}}
-
-exported_model = torch.export.export(model_to_quantize, example_inputs).module()
-
-batch_dim = torch.export.Dim("batch", min=1, max=1024)
 exported_model = torch.export.export(model_to_quantize, example_inputs, dynamic_shapes=dynamic_shapes).module()
-
 quantizer = XNNPACKQuantizer()
 quantizer.set_global(get_symmetric_quantization_config())
-
 prepared_model = prepare_pt2e(exported_model, quantizer)
-
 calibrate(prepared_model, data_loader_test)  # run calibration on sample data
-
 quantized_model = convert_pt2e(prepared_model)
 print(quantized_model)
 
@@ -136,7 +128,7 @@ program = to_edge_transform_and_lower(
 ).to_executorch()
 
 # 3. Save for deployment
-with open("model.pte", "wb") as f:
+with open(pte_filename, "wb") as f:
     f.write(program.buffer)
 
 # Test locally via ExecuTorch runtime's pybind API (optional)

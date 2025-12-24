@@ -45,12 +45,41 @@ public:
      */
     MobileNetV2(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8, float dropout = 0.2)
     {
-        quantFeatures = std::make_shared<executorch::extension::Module>("model.pte");
+        quantFeatures = std::make_shared<executorch::extension::Module>("mobilenet_features_quant.pte");
+        const auto result = quantFeatures->load_forward();
+        if (executorch::runtime::Error::Ok != result) {
+            std::cerr << "Could not load forward(): " << (int)result << std::endl;
+        }
+
+        const auto method_meta = quantFeatures->method_meta("forward");
+
+        if (method_meta.ok())
+        {
+            std::cerr << "Num of inputs: " << (int)(method_meta->num_inputs()) << std::endl;
+            const auto input_meta = method_meta->input_tensor_meta(0);
+            if (input_meta.ok())
+            {
+                std::cerr << "Input Scalar type (6): " << (int)(input_meta->scalar_type()) << std::endl;
+                std::cerr << "Sizes: ";
+                for(auto &s : input_meta->sizes()) std::cerr << s << " ";
+                std::cerr << std::endl;
+            }
+
+            std::cerr << "Num of outputs: " << (int)(method_meta->num_outputs()) << std::endl;
+            const auto output_meta = method_meta->output_tensor_meta(0);
+            if (output_meta.ok())
+            {
+                std::cerr << "Output Scalar type (6): " << (int)(output_meta->scalar_type()) << std::endl;
+                std::cerr << "Sizes: ";
+                for(auto &s : output_meta->sizes()) std::cerr << s << " ";
+                std::cerr << std::endl;
+            }
+        }
 
         executorch::runtime::Error error = quantFeatures->load();
         if (!(quantFeatures->is_loaded()))
         {
-            std::cerr << "Err:" << (int)error << std::endl;
+            std::cerr << "Err:" << (int)error << executorch::runtime::to_string(error) << std::endl;
             exit(-1);
         }
 
@@ -88,18 +117,19 @@ public:
     torch::Tensor forward(torch::Tensor x)
     {
         x = x.contiguous().cpu();
+        std::cerr << "forward(x): sizes = " << x.sizes() << std::endl;
         std::vector<int> insizes(
             x.sizes().begin(),
             x.sizes().end());
         auto et_tensor = executorch::extension::from_blob(
             x.data_ptr<float>(),
             insizes);
-        executorch::runtime::EValue input = executorch::runtime::EValue(et_tensor);
-        auto result = quantFeatures->forward({input});
+        auto result = quantFeatures->forward(et_tensor);
         if (!result.ok())
         {
-            std::cerr << "Fatal. No result from model." << std::endl;
-            exit(1);
+            std::cerr << "Fatal. No result from model: ";
+            std::cerr << (int)(result.error()) << ", " << executorch::runtime::to_string(result.error()) << std::endl;
+            exit(-1);
         }
         const auto et = result->at(0).toTensor();
         std::vector<long int> outsizes(
