@@ -47,11 +47,18 @@ public:
     {
         quantFeatures = std::make_shared<executorch::extension::Module>("model.pte");
 
+        executorch::runtime::Error error = quantFeatures->load();
+        if (!(quantFeatures->is_loaded()))
+        {
+            std::cerr << "Err:" << (int)error << std::endl;
+            exit(-1);
+        }
+
         int input_channels = 32;
         input_channels = make_divisible(input_channels * width_mult, round_nearest);
         features_output_channels = make_divisible(features_output_channels * std::max(1.0f, width_mult), round_nearest);
 
-//        register_module(featuresModuleName, quantFeatures);
+        //        register_module(featuresModuleName, quantFeatures);
 
         // classifier: Dropout + Linear
         classifier = torch::nn::Sequential();
@@ -89,8 +96,12 @@ public:
             insizes);
         executorch::runtime::EValue input = executorch::runtime::EValue(et_tensor);
         auto result = quantFeatures->forward({input});
-        const std::vector<executorch::runtime::EValue> &outputs = result.get();
-        auto et = outputs[0].toTensor();
+        if (!result.ok())
+        {
+            std::cerr << "Fatal. No result from model." << std::endl;
+            exit(1);
+        }
+        const auto et = result->at(0).toTensor();
         std::vector<long int> outsizes(
             et.sizes().begin(),
             et.sizes().end());
