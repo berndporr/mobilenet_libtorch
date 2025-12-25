@@ -45,7 +45,7 @@ public:
      */
     MobileNetV2(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8, float dropout = 0.2)
     {
-        quantFeatures = std::make_shared<executorch::extension::Module>("model.pte");
+        quantFeatures = std::make_shared<executorch::extension::Module>("bilenet_features_quant.pte");
 
         executorch::runtime::Error error = quantFeatures->load();
         if (!(quantFeatures->is_loaded()))
