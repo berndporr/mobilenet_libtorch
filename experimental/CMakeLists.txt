@@ -14,21 +14,32 @@ add_compile_options(-Wall)
 
 find_package(Torch REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(executorch REQUIRED)
 
 message(STATUS "OpenCV version: ${OpenCV_VERSION}")
 message(STATUS "OpenCV include path: ${OpenCV_INCLUDE_DIRS}")
 message(STATUS "Libtorch version: ${Torch_VERSION}")
 message(STATUS "Libtorch include path: ${TORCH_INCLUDE_DIRS}")
-message(STATUS "Executorch include path: ${EXECUTORCH_INCLUDE_DIRS}")
 
 
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${TORCH_INCLUDE_DIRS})
 include_directories(${OpenCV_INCLUDE_DIRS})
-include_directories(${EXECUTORCH_INCLUDE_DIRS})
 
 include(GNUInstallDirs)
 
 add_executable (transfer transfer.cpp)
-target_link_libraries(transfer ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES} ${EXECUTORCH_LIBRARIES} libextension_flat_tensor.a)
+target_link_libraries(transfer ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES}
+    extension_tensor
+    extension_module
+    extension_data_loader
+    extension_flat_tensor
+    executorch
+    executorch_core
+
+    # XNNPACK backend
+    xnnpack_backend
+
+    # XNNPACK dependencies
+    XNNPACK
+    pthreadpool
+)
