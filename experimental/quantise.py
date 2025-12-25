@@ -136,7 +136,7 @@ program = to_edge_transform_and_lower(
 ).to_executorch()
 
 # 3. Save for deployment
-with open("model.pte", "wb") as f:
+with open(pte_filename, "wb") as f:
     f.write(program.buffer)
 
 # Test locally via ExecuTorch runtime's pybind API (optional)
