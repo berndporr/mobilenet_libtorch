@@ -117,7 +117,7 @@ public:
     torch::Tensor forward(torch::Tensor x)
     {
         x = x.contiguous().cpu();
-        std::cerr << "forward(x): sizes = " << x.sizes() << std::endl;
+        //std::cerr << "forward(x): sizes = " << x.sizes() << std::endl;
         std::vector<int> insizes(
             x.sizes().begin(),
             x.sizes().end());

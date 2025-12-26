@@ -37,9 +37,18 @@ target_link_libraries(transfer ${TORCH_LIBRARIES} ${OpenCV_LIBRARIES}
     executorch_core
 
     # XNNPACK backend
-    xnnpack_backend
+    # xnnpack_backend
+    "$<LINK_LIBRARY:WHOLE_ARCHIVE,xnnpack_backend>"
 
     # XNNPACK dependencies
     XNNPACK
+
+    xnnpack-microkernels-prod
+
     pthreadpool
+    extension_threadpool
+
+    quantized_kernels
+    quantized_ops_lib
+    kernels_util_all_deps
 )
