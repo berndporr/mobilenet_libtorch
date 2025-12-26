@@ -1,0 +1,11 @@
+# Building
+```
+source ~/venv/bin/activate
+cmake --preset linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local .
+cd cmake-out
+make
+sudo make install
+```
+
+https://android.googlesource.com/platform/external/executorch/+/HEAD/docs/source/extension-module.md
+
