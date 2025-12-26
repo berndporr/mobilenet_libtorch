@@ -7,6 +7,7 @@ This installs both the executorch python package and the C++ static libraries
 ```
 git clone https://github.com/pytorch/executorch
 cd executorch
+git checkout v1.0.1
 source ~/venv/bin/activate
 python install_executorch.py
 cmake --preset linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local .
