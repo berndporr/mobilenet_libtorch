@@ -17,25 +17,18 @@ from executorch.exir import to_edge_transform_and_lower
 from torchao.quantization.pt2e.quantize_pt2e import convert_pt2e, prepare_pt2e
 train_batch_size = 32
 eval_batch_size = 32
-pte_filename = "mobilenet_features_quant.pte"
-
-# Set up warnings
-import warnings
-warnings.filterwarnings(
-    action='ignore',
-    category=DeprecationWarning,
-    module=r'.*'
-)
-warnings.filterwarnings(
-    action='default',
-    module=r'torchao.quantization.pt2e'
-)
+pte_filename_features = "mobilenet_features_quant.pte"
 
 # Specify random seed for repeatable results
 _ = torch.manual_seed(191009)
 
-def load_model():
+def load_model_features():
     model = models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT).features
+    model.to("cpu")
+    return model
+
+def load_model_classifier():
+    model = models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT).classifier
     model.to("cpu")
     return model
 
@@ -83,57 +76,61 @@ def calibrate(model, data_loader):
         for image, target in data_loader:
             model(image)
 
-data_path = kagglehub.dataset_download("abdalnassir/the-animalist-cat-vs-dog-classification")+"/Cat vs Dog"
-print("File are here: ",data_path)
-data_loader, data_loader_test = prepare_data_loaders(data_path)
-example_inputs = (next(iter(data_loader))[0])
-criterion = nn.CrossEntropyLoss()
-float_model = load_model().to("cpu")
-float_model.eval()
+def createFeaturesFile():
+    data_path = kagglehub.dataset_download("abdalnassir/the-animalist-cat-vs-dog-classification")+"/Cat vs Dog"
+    print("File are here: ",data_path)
+    data_loader, data_loader_test = prepare_data_loaders(data_path)
+    example_inputs = (next(iter(data_loader))[0])
 
-# create another instance of the model since
-# we need to keep the original model around
-model_to_quantize = load_model().to("cpu")
+    float_model = load_model_features().to("cpu")
+    float_model.eval()
 
-model_to_quantize.eval()
+    # create another instance of the model since
+    # we need to keep the original model around
+    model_to_quantize = load_model_features().to("cpu")
 
-example_inputs = (torch.rand(train_batch_size, 3, 224, 224),)
-batch_dim = torch.export.Dim("batch", min=1, max=train_batch_size)
-dynamic_shapes={"input": {0: batch_dim}}
-exported_model = torch.export.export(model_to_quantize, example_inputs, dynamic_shapes=dynamic_shapes).module()
-quantizer = XNNPACKQuantizer()
-quantizer.set_global(get_symmetric_quantization_config())
-prepared_model = prepare_pt2e(exported_model, quantizer)
-calibrate(prepared_model, data_loader_test)  # run calibration on sample data
-quantized_model = convert_pt2e(prepared_model)
-print(quantized_model)
+    model_to_quantize.eval()
 
-# Baseline model size
-print("Size of baseline model")
-print_size_of_model(float_model)
+    example_inputs = (torch.rand(train_batch_size, 3, 224, 224),)
+    batch_dim = torch.export.Dim("batch", min=1, max=train_batch_size)
+    dynamic_shapes={"input": {0: batch_dim}}
+    exported_model = torch.export.export(model_to_quantize, example_inputs, dynamic_shapes=dynamic_shapes).module()
+    quantizer = XNNPACKQuantizer()
+    quantizer.set_global(get_symmetric_quantization_config())
+    prepared_model = prepare_pt2e(exported_model, quantizer)
+    calibrate(prepared_model, data_loader_test)  # run calibration on sample data
+    quantized_model = convert_pt2e(prepared_model)
+    print(quantized_model)
 
-# Quantized model size
-print("Size of model after quantization")
-# export again to remove unused weights
-quantized_model = torch.export.export(quantized_model, example_inputs, dynamic_shapes=dynamic_shapes).module()
-print_size_of_model(quantized_model)
+    # Baseline model size
+    print("Size of baseline model")
+    print_size_of_model(float_model)
 
-# capture the model to get an ExportedProgram
-quantized_ep = torch.export.export(quantized_model, example_inputs, dynamic_shapes=dynamic_shapes)
+    # Quantized model size
+    print("Size of model after quantization")
+    # export again to remove unused weights
+    quantized_model = torch.export.export(quantized_model, example_inputs, dynamic_shapes=dynamic_shapes).module()
+    print_size_of_model(quantized_model)
 
-# 2. Optimize for target hardware (switch backends with one line)
-program = to_edge_transform_and_lower(
-    quantized_ep,
-    partitioner=[XnnpackPartitioner()]  # CPU | CoreMLPartitioner() for iOS | QnnPartitioner() for Qualcomm
-).to_executorch()
+    # capture the model to get an ExportedProgram
+    quantized_ep = torch.export.export(quantized_model, example_inputs, dynamic_shapes=dynamic_shapes)
 
-# 3. Save for deployment
-with open(pte_filename, "wb") as f:
-    f.write(program.buffer)
+    # Optimize for target hardware (switch backends with one line)
+    program = to_edge_transform_and_lower(
+        quantized_ep,
+        partitioner=[XnnpackPartitioner()]
+    ).to_executorch()
 
-# Test locally via ExecuTorch runtime's pybind API (optional)
-from executorch.runtime import Runtime
-runtime = Runtime.get()
-method = runtime.load_program(pte_filename).load_method("forward")
-outputs = method.execute([torch.randn(1, 3, 224, 224)])
-print(outputs)
+    # 3. Save for deployment
+    with open(pte_filename_features, "wb") as f:
+        f.write(program.buffer)
+
+    # Test locally via ExecuTorch runtime's pybind API (optional)
+    from executorch.runtime import Runtime
+    runtime = Runtime.get()
+    method = runtime.load_program(pte_filename_features).load_method("forward")
+    outputs = method.execute([torch.randn(1, 3, 224, 224)])
+    print(outputs)
+
+
+createFeaturesFile()

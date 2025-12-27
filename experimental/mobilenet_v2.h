@@ -39,11 +39,9 @@ public:
      * default values for the parameters.
      *
      * @param num_classes Number of classes.
-     * @param width_mult Width multiplier - adjusts number of channels in each layer by this amount.
-     * @param round_nearest Round the number of channels in each layer to be a multiple of this number.
      * @param dropout Dropout probability for the dropout layer in the classifier.
      */
-    MobileNetV2(int num_classes = 1000, float width_mult = 1.0f, int round_nearest = 8, float dropout = 0.2)
+    MobileNetV2(int num_classes = 1000, float dropout = 0.2)
     {
         quantFeatures = std::make_shared<executorch::extension::Module>("mobilenet_features_quant.pte");
         const auto result = quantFeatures->load_forward();
@@ -83,12 +81,6 @@ public:
             exit(-1);
         }
 
-        int input_channels = 32;
-        input_channels = make_divisible(input_channels * width_mult, round_nearest);
-        features_output_channels = make_divisible(features_output_channels * std::max(1.0f, width_mult), round_nearest);
-
-        //        register_module(featuresModuleName, quantFeatures);
-
         // classifier: Dropout + Linear
         classifier = torch::nn::Sequential();
         classifier->push_back(torch::nn::Dropout(torch::nn::DropoutOptions(dropout)));
@@ -117,7 +109,6 @@ public:
     torch::Tensor forward(torch::Tensor x)
     {
         x = x.contiguous().cpu();
-        //std::cerr << "forward(x): sizes = " << x.sizes() << std::endl;
         std::vector<int> insizes(
             x.sizes().begin(),
             x.sizes().end());
@@ -136,7 +127,7 @@ public:
             et.sizes().begin(),
             et.sizes().end());
         x = torch::from_blob(
-            et.data_ptr<float>(), // raw pointer
+            et.mutable_data_ptr<float>(),
             outsizes,
             torch::TensorOptions()
                 .dtype(torch::kFloat)
@@ -153,7 +144,7 @@ public:
      */
     void initialize_weights()
     {
-        for (auto &module : modules(/*include_self=*/false))
+        for (auto &module : classifier->modules(/*include_self=*/false))
         {
             if (auto M = dynamic_cast<torch::nn::Conv2dImpl *>(module.get()))
             {
@@ -216,10 +207,9 @@ public:
         torch::NoGradGuard no_grad;
         if (debugOutput)
             std::cerr << "Loading weights" << std::endl;
-        for (auto &m : named_parameters())
+        for (auto &m : classifier->named_parameters())
         {
-            const std::string model_key = m.key();
-            const std::string model_key4torchvision = ourkey2torchvision(model_key);
+            const std::string model_key4torchvision = m.key();
             if (debugOutput)
                 std::cerr << "Searching for: " << model_key4torchvision << ": " << m.value().sizes() << std::endl;
             bool foundit = false;
@@ -239,10 +229,9 @@ public:
         }
         if (debugOutput)
             std::cerr << "Loading named buffers" << std::endl;
-        for (auto &b : named_buffers())
+        for (auto &b : classifier->named_buffers())
         {
-            std::string model_key = b.key();
-            std::string model_key4torchvision = ourkey2torchvision(model_key);
+            std::string model_key4torchvision = b.key();
             if (debugOutput)
                 std::cerr << "Searching for: " << model_key4torchvision << ": " << b.value().sizes() << std::endl;
             bool foundit = false;

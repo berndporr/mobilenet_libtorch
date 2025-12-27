@@ -110,7 +110,8 @@ int main()
     MobileNetV2 model;
 
     // Load the pre-trained weights.
-    model.load_torchvision_weights(pretrained_weights_file);
+    // model.load_torchvision_weights(pretrained_weights_file);
+    model.initialize_weights();
 
     // Replace the standard classifier by this custom one with
     // only two categories for cats and dogs.
