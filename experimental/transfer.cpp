@@ -66,7 +66,7 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
         {
             throw std::runtime_error("Failed to load image: " + sample.image_path.string());
         }
-        const torch::Tensor data = MobileNetV2::preprocess(img);
+        const torch::Tensor data = MobileNetV2q::preprocess(img);
         const torch::Tensor label = torch::tensor(sample.label, torch::kLong);
         return {data, label};
     }
@@ -107,10 +107,8 @@ int main()
         torch::data::DataLoaderOptions().batch_size(batch_size));
 
     // Model setup
-    MobileNetV2 model;
+    MobileNetV2q model;
 
-    // Load the pre-trained weights.
-    // model.load_torchvision_weights(pretrained_weights_file);
     model.initialize_weights();
 
     // Replace the standard classifier by this custom one with

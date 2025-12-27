@@ -27,10 +27,9 @@ constexpr bool debugOutput = true;
 #endif
 
 /**
- * @brief Implementation of MobileNetV2 as done in py-torchvision
- * See: // https://github.com/pytorch/vision/blob/main/torchvision/models/mobilenetv2.py#L66
+ * @brief Implementation of MobileNetV2 with a quanitised feature detector via executorch
  */
-class MobileNetV2 : public torch::nn::Module
+class MobileNetV2q : public torch::nn::Module
 {
 public:
     /**
@@ -41,7 +40,7 @@ public:
      * @param num_classes Number of classes.
      * @param dropout Dropout probability for the dropout layer in the classifier.
      */
-    MobileNetV2(int num_classes = 1000, float dropout = 0.2)
+    MobileNetV2q(int num_classes = 1000, float dropout = 0.2)
     {
         quantFeatures = std::make_shared<executorch::extension::Module>("mobilenet_features_quant.pte");
         const auto result = quantFeatures->load_forward();
@@ -189,14 +188,12 @@ public:
             std::cerr << "Parameters we have in this model here: " << std::endl;
             for (auto const &m : named_parameters())
             {
-                auto k = ourkey2torchvision(m.key());
-                std::cerr << m.key() << "->" << k << ": " << m.value().sizes() << std::endl;
+                std::cerr << m.key() << ": " << m.value().sizes() << std::endl;
             }
             std::cerr << "Named buffers we have in this model here: " << std::endl;
             for (const auto &b : named_buffers())
             {
-                auto k = ourkey2torchvision(b.key());
-                std::cout << b.key() << "->" << k << ": " << b.value().sizes() << std::endl;
+                std::cout << b.key() << ": " << b.value().sizes() << std::endl;
             }
             std::cerr << "Parameters we have in the weight file " << pt << ":" << std::endl;
             for (auto const &w : weights)
@@ -312,7 +309,7 @@ public:
     void replaceClassifier(torch::nn::Sequential &newClassifier)
     {
         classifier = newClassifier;
-        replace_module(MobileNetV2::classifierModuleName, newClassifier);
+        replace_module(MobileNetV2q::classifierModuleName, newClassifier);
     }
 
     /**
@@ -336,29 +333,6 @@ private:
 
     // Features output channels but can be scaled.
     int features_output_channels = 1280;
-
-    // Helper which maps the libtorch keys to pytorch keys.
-    // libtorch requires names for the submodules, for example:
-    // features.14.InvertedResidual.1.Conv2dNormActivation.1.weight.
-    // However, pytorch has no names for the submodules and needs to be removed:
-    // features.14.conv.1.1.weight.
-    // Also it renames "InvertedResidual" to "conv" which is just due to my
-    // choice to call it what it is and not just "conv".
-    std::string ourkey2torchvision(std::string k) const
-    {
-        return k;
-    }
-
-    // Makes a value divisible.
-    inline int make_divisible(int v, int divisor = 8, int min_value = -1) const
-    {
-        if (min_value < 0)
-            min_value = divisor;
-        int new_v = std::max(min_value, ((int)(((int)(v + divisor / 2)) / divisor)) * divisor);
-        if (new_v < (0.9 * (float)v))
-            new_v += divisor;
-        return new_v;
-    }
 
     std::shared_ptr<executorch::extension::Module> quantFeatures;
 };
