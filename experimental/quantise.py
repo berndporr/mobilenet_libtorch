@@ -96,7 +96,6 @@ def createFeaturesFile():
     dynamic_shapes={"input": {0: batch_dim}}
     exported_model = torch.export.export(model_to_quantize, example_inputs, dynamic_shapes=dynamic_shapes).module()
     quantizer = XNNPACKQuantizer()
-    quantizer.set_global(get_symmetric_quantization_config())
     prepared_model = prepare_pt2e(exported_model, quantizer)
     calibrate(prepared_model, data_loader_test)  # run calibration on sample data
     quantized_model = convert_pt2e(prepared_model)
