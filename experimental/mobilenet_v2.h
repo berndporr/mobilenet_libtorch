@@ -14,9 +14,7 @@
 #include <executorch/extension/tensor/tensor.h>
 
 /***
- * MobileNetV2 C++ Implementation (LibTorch).
- * It's able to load pre-trained weights from torchvision
- * and has the neccessary methods to enable transfer learning.
+ * MobileNetV2q C++ Implementation (LibTorch & Executorch).
  * (c) 2025 Bernd Porr, GPLv3.
  ***/
 

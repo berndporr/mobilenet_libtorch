@@ -14,9 +14,6 @@ namespace fs = std::filesystem;
 // Path of the Kaggle dataset
 const fs::path datasetpath = ".cache/kagglehub/datasets/abdalnassir/the-animalist-cat-vs-dog-classification/versions/1/Cat vs Dog/train/";
 
-// Path to the pretrained weights file
-const char pretrained_weights_file[] = "../mobilenet_v2.pt";
-
 // Path to the loss log file
 const char loss_file[] = "loss.dat";
 
@@ -91,11 +88,6 @@ int main()
 {
     torch::manual_seed(42);
     torch::Device device(torch::kCPU);
-    if (torch::cuda::is_available())
-    {
-        const torch::DeviceType device_type = torch::kCUDA;
-        device = torch::Device(device_type);
-    }
 
     const fs::path homedir(getpwuid(getuid())->pw_dir);
     ImageFolderDataset ds(homedir / datasetpath, classes);
