@@ -8,6 +8,7 @@
 #include <pwd.h>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -75,10 +76,10 @@ struct ImageFolderDataset : torch::data::Dataset<ImageFolderDataset>
 };
 
 // Simple progress output on the same line. No new line.
-void progress(int epoch, int epochs, double loss)
+void progress(int epoch, int epochs, double loss, float f)
 {
     std::cout << "Epoch [" << epoch << "/" << epochs << "], Loss: "
-              << loss << "\r" << std::flush;
+              << loss << "\t" << f << "Hz" << "\r" << std::flush;
 }
 
 // -------------------------
@@ -121,12 +122,15 @@ int main()
     std::fstream floss;
     floss.open(loss_file, std::fstream::out);
 
+    float f = 0;
+
     // Training loop
     for (int epoch = 1; epoch <= epochs; epoch++)
     {
         float cumloss = 0;
-        int n = 0;
         model.train();
+        int n = 0;
+        auto start = std::chrono::high_resolution_clock::now();
         for (auto &batch : *loader)
         {
             auto data = batch.data.to(device);
@@ -137,12 +141,15 @@ int main()
             auto loss = criterion(output, target);
             loss.backward();
             optimizer.step();
-            progress(epoch, epochs, loss.item<double>());
+            auto current = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(current - start);
+            f = n*1000/(float)duration.count();
+            progress(epoch, epochs, loss.item<double>(), f);
             cumloss += loss.item<double>();
             n++;
         }
         const double avgLoss = cumloss / (double)n;
-        progress(epoch, epochs, avgLoss);
+        progress(epoch, epochs, avgLoss, f);
         floss << epoch << "\t" << avgLoss << std::endl;
         std::cout << std::endl
                   << std::flush;
